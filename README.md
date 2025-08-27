@@ -22,7 +22,7 @@ A powerful web application for exploring and visualizing geospatial NetCDF and Z
 ### Option 1: Using uv (Recommended)
 ```bash
 # Clone the repository
-git clone https://github.com/samuelfooks/nczarr-viewer.git
+git clone https://github.com/EDITO-Infra/nczarr-viewer
 cd nczarr-viewer
 
 # Install dependencies and run
@@ -33,7 +33,7 @@ python run.py
 ### Option 2: Using pip
 ```bash
 # Clone the repository
-git clone https://github.com/samuelfooks/nczarr-viewer.git
+git clone https://github.com/EDITO-Infra/nczarr-viewer
 cd nczarr-viewer
 
 # Install in development mode
@@ -148,14 +148,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Author
 
-**Samuel Fooks** - [samuel.fooks@gmail.com](mailto:samuel.fooks@gmail.com)
+**Samuel Fooks** - [samuel.fooks@vliz.be](mailto:samuel.fooks@vliz.be)
 
-- **GitHub**: [https://github.com/samuelfooks/nczarr-viewer](https://github.com/samuelfooks/nczarr-viewer)
+- **GitHub**: [https://github.com/samuelfooks/nczarr-viewer](https://github.com/EDITO-Infra/nczarr-viewer)
 - **Docker Hub**: [samfooks/nczarr-viewer](https://hub.docker.com/r/samfooks/nczarr-viewer)
 
 ## 🆘 Support
 
-- **Issues**: [GitHub Issues](https://github.com/samuelfooks/nczarr-viewer/issues)
+- **Issues**: [GitHub Issues](hhttps://github.com/EDITO-Infra/nczarr-viewer/issues)
 - **Documentation**: Check the `docs/` folder
 - **Examples**: See `docs/explore_data/` for sample workflows
 

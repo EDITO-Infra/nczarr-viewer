@@ -17,32 +17,33 @@ html:
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 # Build both docs and presentation
-all: $(BUILDDIR)/html/nczarr_viewer_presentation.html html
+all: presentationhtml html
 
 # Build PDF presentation
 presentationpdf: nczarr_viewer_presentation.pdf
 
 # Build HTML presentation
-presentationhtml: $(BUILDDIR)/html/nczarr_viewer_presentation.html
+presentationhtml: nczarr_viewer_presentation.html
 
 # Rule to build PDF from markdown using pandoc
 nczarr_viewer_presentation.pdf: nczarr_viewer_presentation.md
-	pandoc $< -o $@ --pdf-engine=xelatex -V geometry:margin=1in
+	marp $< --output $@
 
-# Rule to build HTML from markdown using Marp and place in build/html/
-$(BUILDDIR)/html/nczarr_viewer_presentation.html: nczarr_viewer_presentation.md
-	mkdir -p $(BUILDDIR)/html/
-	marp $< --output $(BUILDDIR)/html/nczarr_viewer_presentation.html
+# Rule to build HTML from markdown using Marp in the same directory
+nczarr_viewer_presentation.html: nczarr_viewer_presentation.md
+	marp $< --output $@
 
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-# Exclude our custom presentation targets from this catch-all
-%: Makefile
-	@if [ "$@" != "nczarr_viewer_presentation.md" ] && [ "$@" != "presentationhtml" ] && [ "$@" != "presentationpdf" ] && [ "$@" != "all" ]; then \
+# Sphinx targets - route all unknown targets to Sphinx using the "make mode" option
+# $(O) is meant as a shortcut for $(SPHINXOPTS).
+.PHONY: help html all presentationpdf presentationhtml clean
+
+# Catch-all target for Sphinx (exclude our custom targets)
+%:
+	@if [ "$@" != "nczarr_viewer_presentation.md" ] && [ "$@" != "presentationhtml" ] && [ "$@" != "presentationpdf" ] && [ "$@" != "all" ] && [ "$@" != "help" ] && [ "$@" != "html" ]; then \
 		$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O); \
 	fi
-	mkdir -p $(BUILDDIR)/html/
-	touch $(BUILDDIR)/html/.nojekyll
+
 clean:
 	rm -rf $(BUILDDIR)/*
 	rm -f nczarr_viewer_presentation.html
+	rm -f nczarr_viewer_presentation.pdf

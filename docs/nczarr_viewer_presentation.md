@@ -57,7 +57,7 @@ author: Samuel Fooks
 docker run -p 8050:8050 samfooks/nczarr-viewer:latest
 
 # Option 2: Local development (if you have Python)
-git clone https://[github.com/samuelfooks/nczarr-viewer](https://github.com/EDITO-Infra/nczarr-viewer)
+git clone [https://github.com/EDITO-Infra/nczarr-viewer)](https://github.com/EDITO-Infra/nczarr-viewer)
 cd nczarr-viewer
 pip install -r requirements.txt
 python run.py
@@ -131,22 +131,42 @@ docker run -p 8050:8050 nczarr-viewer
 ```
 
 ---
+# 🌊 Use the NCZarr Viewer locally or on EDITO
+<div style="text-align: center; margin: 20px 0;">
+  <video width="70%" controls>
+    <source src="../assets/nczarrviewer_localoredito.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
 
-# 🌊 Live Demo Time! 
-##### Loading a NetCDF from your Minio bucket on EDITO
+*Click to play*
 
+---
+
+##### Explore a NetCDF from your Minio bucket on EDITO
+
+<div style="text-align: center; margin: 20px 0;">
+  <video width="70%" controls>
+    <source src="../assets/nczarrviewer_minionetcdf.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+*Click to play*
 
 ---
 
 # 🌊 Live Demo Time!
-##### Explore CMEMs data using a link to a zarr file, obtained from MyOceanViewer
+##### Explore CMEMs dataset using zarr link from EDITO STAC
 
+<div style="text-align: center; margin: 20px 0;">
+  <video width="70%" controls>
+    <source src="../assets/nczarrviewer_cmems.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
 
----
-
-# 🌊 Live Demo Time!
-##### Explore data on your local PC you downloaded(boring)
-
+*Click to play*
 
 ---
 
@@ -162,7 +182,7 @@ docker run -p 8050:8050 nczarr-viewer
 # 🌊 Thank You!
 
 **Samuel Fooks** - samuel.fooks@vliz.be 
-**GitHub**: [https://github.com/samuelfooks/nczarr-viewer](https://github.com/samuelfooks/nczarr-viewer)
+**GitHub**: [https://github.com/EDITO-Infra/nczarr-viewer](https://github.com/EDITO-Infra/nczarr-viewer)
 **Docker Hub**: samfooks/nczarr-viewer
 
 **Questions?**

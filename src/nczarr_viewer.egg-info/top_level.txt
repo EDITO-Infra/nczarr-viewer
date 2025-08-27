@@ -4,5 +4,4 @@ data
 dimension
 main
 setup
-temp_images
 variables

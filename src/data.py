@@ -31,7 +31,7 @@ class DatasetLoader:
         try:
             import copernicusmarine  # noqa: F401
             backends['copernicusmarine'] = {
-                'engines': ['default', 'custom_open_zarr'],
+                'engines': ['default', 'copernicusmarinetoolbox', 'custom_open_zarr'],
                 'description': 'Copernicus Marine Service backend'
             }
         except ImportError:
@@ -168,13 +168,13 @@ class DatasetLoader:
 
             # Provide helpful error message with tips
             error_msg = f"All engines failed. Last error: {e}"
-            
+
             # Add specific help for common issues
             if "netcdf4" in str(e).lower() or "netcdf" in str(e).lower():
                 error_msg += "\n\n💡 NetCDF loading failed. Try these solutions:"
                 error_msg += "\n• For netcdf files on s3 storage: Add #mode=bytes at the end of the URL"
                 error_msg += "\n• Check if the file is corrupted or incomplete"
-            
+
             raise Exception(error_msg)
 
     def _load_with_copernicusmarine(self, url, engine='default', **kwargs):
@@ -285,8 +285,15 @@ class DatasetLoader:
             filtered_kwargs = {k: v for k, v in kwargs.items()
                                if k not in ['username', 'password', 'dataset_id']}
 
-            if engine == 'default':
-                # Use copernicusmarine.open_dataset with dataset_id
+            if engine == 'default' or engine == 'copernicusmarinetoolbox':
+                # Use copern icusmarine.open_dataset with dataset_id
+                print(
+                    f"opening dataset with copernicusmarine.open_dataset and {dataset_id}")
+                print(f"filtered_kwargs: {filtered_kwargs}")
+                print(f"username: {username}")
+                # print(f"password: {password}")
+                print(f"engine: {engine}")
+                print(f"dataset_id: {dataset_id}")
                 ds = copernicusmarine.open_dataset(
                     dataset_id, username=username, password=password, **filtered_kwargs
                 )
@@ -352,9 +359,8 @@ class DataManager:
             except Exception as e:
                 return f"Error: {str(e)}"
 
-
-
         # Callback for extracting image and showing in separate container
+
         @self.app.callback(
             Output('raster-container', 'children'),
             Input('extract-plot-button', 'n_clicks'),
@@ -421,12 +427,12 @@ class DataManager:
                 # Create container with base64 image for full-width display
                 container_content = [
                     html.Div([
-                        html.H4(f"📊 {selected_var} - Raster Analysis", 
-                               className="text-center mb-3 text-primary"),
+                        html.H4(f"📊 {selected_var} - Raster Analysis",
+                                className="text-center mb-3 text-primary"),
                         html.Img(
                             src=image_path,  # This is now base64 data
                             style={
-                                'width': '100%', 
+                                'width': '100%',
                                 'height': 'auto',
                                 'maxWidth': '1200px',
                                 'display': 'block',
@@ -437,13 +443,13 @@ class DataManager:
                             className="raster-image"
                         ),
                         html.Div([
-                            html.P("✅ Image generated successfully!", 
-                                   className="text-success text-center mt-3 mb-2", 
+                            html.P("✅ Image generated successfully!",
+                                   className="text-success text-center mt-3 mb-2",
                                    style={'fontSize': '14px', 'fontWeight': 'bold'}),
-                            dbc.Button('🗺️ Overlay on World Map', 
+                            dbc.Button('🗺️ Overlay on World Map',
                                        id='overlay-button',
-                                       color='primary', 
-                                       size='lg', 
+                                       color='primary',
+                                       size='lg',
                                        className='mx-auto d-block')
                         ], className="text-center")
                     ])
@@ -470,7 +476,7 @@ class DataManager:
             """Overlay the generated raster image on the world map"""
             print(f"=== OVERLAY CALLBACK TRIGGERED ===")
             print(f"n_clicks: {n_clicks}")
-            
+
             if n_clicks is None or n_clicks == 0:
                 print("No clicks detected")
                 return "Click 'Overlay on Map' to see the result", {'display': 'none'}
@@ -486,8 +492,9 @@ class DataManager:
                 subsetted_data = self.current_raster_data
                 lat_dim = self.current_lat_dim
                 lon_dim = self.current_lon_dim
-                
-                print(f"Stored data - var: {selected_var}, lat_dim: {lat_dim}, lon_dim: {lon_dim}")
+
+                print(
+                    f"Stored data - var: {selected_var}, lat_dim: {lat_dim}, lon_dim: {lon_dim}")
                 print(f"Subsetted data shape: {dict(subsetted_data.sizes)}")
 
                 # Get the stored base64 image data
@@ -497,7 +504,8 @@ class DataManager:
 
                 image_src = self.current_raster_image
                 print(f"Image source type: {type(image_src)}")
-                print(f"Image source length: {len(image_src) if isinstance(image_src, str) else 'N/A'}")
+                print(
+                    f"Image source length: {len(image_src) if isinstance(image_src, str) else 'N/A'}")
 
                 print("Creating world map with overlay...")
                 # Create world map with overlay
@@ -509,7 +517,7 @@ class DataManager:
                     return "Error: Could not create overlay", {'display': 'none'}
 
                 print("Overlay figure created successfully, returning...")
-                
+
                 # Return the Plotly figure in a Graph component
                 return dcc.Graph(figure=overlay_figure, config={"displayModeBar": True, "scrollZoom": True}), {'display': 'block'}
 
@@ -540,7 +548,8 @@ class DataManager:
                     # Debug: show coordinate values and their order
                     if dim in variable_data.coords:
                         coords_vals = variable_data.coords[dim].values
-                        print(f"  {dim} coords: {coords_vals[:5]}... (length: {len(coords_vals)}, ascending: {coords_vals[0] < coords_vals[-1]})")
+                        print(
+                            f"  {dim} coords: {coords_vals[:5]}... (length: {len(coords_vals)}, ascending: {coords_vals[0] < coords_vals[-1]})")
                     if isinstance(val, tuple):
                         if len(val) == 2:
                             # Range selection (start, end) - use slice for array subsetting
@@ -560,37 +569,43 @@ class DataManager:
                             # This handles both ascending and descending coordinate arrays correctly
                             min_val = min(start_val, end_val)
                             max_val = max(start_val, end_val)
-                            
+
                             # Find indices where coordinates fall within the range
-                            valid_mask = (dim_coords >= min_val) & (dim_coords <= max_val)
+                            valid_mask = (dim_coords >= min_val) & (
+                                dim_coords <= max_val)
                             valid_indices = np.where(valid_mask)[0]
-                            
+
                             if len(valid_indices) > 0:
                                 start_idx = int(valid_indices[0])
                                 end_idx = int(valid_indices[-1])
-                                
+
                                 # Create slice - this preserves the original coordinate order
                                 isel_dict[dim] = slice(start_idx, end_idx + 1)
-                                print(f"  Created slice for {dim}: {start_idx}:{end_idx + 1} (from values {min_val} to {max_val})")
+                                print(
+                                    f"  Created slice for {dim}: {start_idx}:{end_idx + 1} (from values {min_val} to {max_val})")
                             else:
                                 # Fallback: use searchsorted approach
-                                start_idx = np.searchsorted(dim_coords, min_val)
+                                start_idx = np.searchsorted(
+                                    dim_coords, min_val)
                                 end_idx = np.searchsorted(dim_coords, max_val)
-                                
+
                                 # Ensure we don't go out of bounds
-                                start_idx = max(0, min(start_idx, len(dim_coords) - 1))
-                                end_idx = max(0, min(end_idx, len(dim_coords) - 1))
+                                start_idx = max(
+                                    0, min(start_idx, len(dim_coords) - 1))
+                                end_idx = max(
+                                    0, min(end_idx, len(dim_coords) - 1))
                                 # Convert numpy types to Python types for slice
                                 start_idx = int(start_idx)
                                 end_idx = int(end_idx)
-                                
+
                                 # Ensure slice indices are in correct order for Python slicing
                                 if start_idx > end_idx:
                                     start_idx, end_idx = end_idx, start_idx
-                                
+
                                 # Create slice
                                 isel_dict[dim] = slice(start_idx, end_idx + 1)
-                                print(f"  Created slice for {dim}: {start_idx}:{end_idx + 1} (from values {min_val} to {max_val})")
+                                print(
+                                    f"  Created slice for {dim}: {start_idx}:{end_idx + 1} (from values {min_val} to {max_val})")
                         elif len(val) == 1:
                             # Single selection (val,) - use exact value selection
                             sel_dict[dim] = val[0]
@@ -607,42 +622,48 @@ class DataManager:
 
                             # Find indices for the start and end values
                             dim_coords = variable_data.coords[dim].values
-                            
+
                             # Find the range of coordinates that fall within the user's selection
                             # This handles both ascending and descending coordinate arrays correctly
                             min_val = min(start_val, end_val)
                             max_val = max(start_val, end_val)
-                            
+
                             # Find indices where coordinates fall within the range
-                            valid_mask = (dim_coords >= min_val) & (dim_coords <= max_val)
+                            valid_mask = (dim_coords >= min_val) & (
+                                dim_coords <= max_val)
                             valid_indices = np.where(valid_mask)[0]
-                            
+
                             if len(valid_indices) > 0:
                                 start_idx = int(valid_indices[0])
                                 end_idx = int(valid_indices[-1])
-                                
+
                                 # Create slice - this preserves the original coordinate order
                                 isel_dict[dim] = slice(start_idx, end_idx + 1)
-                                print(f"  Created slice for {dim}: {start_idx}:{end_idx + 1} (from values {min_val} to {max_val})")
+                                print(
+                                    f"  Created slice for {dim}: {start_idx}:{end_idx + 1} (from values {min_val} to {max_val})")
                             else:
                                 # Fallback: use searchsorted approach
-                                start_idx = np.searchsorted(dim_coords, min_val)
+                                start_idx = np.searchsorted(
+                                    dim_coords, min_val)
                                 end_idx = np.searchsorted(dim_coords, max_val)
-                                
+
                                 # Ensure we don't go out of bounds
-                                start_idx = max(0, min(start_idx, len(dim_coords) - 1))
-                                end_idx = max(0, min(end_idx, len(dim_coords) - 1))
+                                start_idx = max(
+                                    0, min(start_idx, len(dim_coords) - 1))
+                                end_idx = max(
+                                    0, min(end_idx, len(dim_coords) - 1))
                                 # Convert numpy types to Python types for slice
                                 start_idx = int(start_idx)
                                 end_idx = int(end_idx)
-                                
+
                                 # Ensure slice indices are in correct order for Python slicing
                                 if start_idx > end_idx:
                                     start_idx, end_idx = end_idx, start_idx
-                                
+
                                 # Create slice
                                 isel_dict[dim] = slice(start_idx, end_idx + 1)
-                                print(f"  Created slice for {dim}: {start_idx}:{end_idx + 1} (from values {min_val} to {max_val})")
+                                print(
+                                    f"  Created slice for {dim}: {start_idx}:{end_idx + 1} (from values {min_val} to {max_val})")
                         elif len(val) == 1:
                             # Single selection [val] - convert to tuple format
                             single_val = val[0]
@@ -912,8 +933,6 @@ class DataManager:
         print("2D heatmap created successfully!")
         return fig
 
-
-
     def create_raster_image(self, data_array, variable_name, lat_dim, lon_dim):
         """Create a raster image from the data array and save it"""
         print("Creating raster image...")
@@ -958,9 +977,12 @@ class DataManager:
         # so that north (90) appears at the top of the image
         if lats_downsampled[0] < lats_downsampled[-1]:  # Ascending order
             values_display = np.flipud(values_downsampled)
-            lat_extent = [lats_downsampled.max(), lats_downsampled.min()]  # Reverse extent
-            lats_for_mesh = np.flipud(lats_downsampled)  # Flip coords to match flipped data
-            print("Latitude coordinates are ascending, flipping data vertically for correct display")
+            # Reverse extent
+            lat_extent = [lats_downsampled.max(), lats_downsampled.min()]
+            # Flip coords to match flipped data
+            lats_for_mesh = np.flipud(lats_downsampled)
+            print(
+                "Latitude coordinates are ascending, flipping data vertically for correct display")
         else:  # Descending order (90 to -90)
             values_display = values_downsampled
             lat_extent = [lats_downsampled.min(), lats_downsampled.max()]
@@ -970,48 +992,50 @@ class DataManager:
         # Create the plot with cartopy for better geographic visualization
         import cartopy.crs as ccrs
         import cartopy.feature as cfeature
-        
+
         # Determine appropriate projection based on data extent
         lon_min, lon_max = lons_downsampled.min(), lons_downsampled.max()
         lat_min, lat_max = lat_extent[0], lat_extent[1]
-        
+
         # Use Plate Carree for global data, or appropriate regional projection
         if lon_max - lon_min > 300:  # Global or near-global data
             projection = ccrs.PlateCarree()
         else:  # Regional data
             projection = ccrs.PlateCarree()
-        
+
         fig = plt.figure(figsize=(16, 12))
         ax = plt.axes(projection=projection)
-        
+
         # Set map extent
-        ax.set_extent([lon_min, lon_max, lat_min, lat_max], crs=ccrs.PlateCarree())
-        
+        ax.set_extent([lon_min, lon_max, lat_min, lat_max],
+                      crs=ccrs.PlateCarree())
+
         # Add natural earth features
         ax.add_feature(cfeature.COASTLINE, linewidth=0.8, edgecolor='black')
         ax.add_feature(cfeature.BORDERS, linewidth=0.5, edgecolor='gray')
         ax.add_feature(cfeature.LAND, facecolor='lightgray', alpha=0.3)
         ax.add_feature(cfeature.OCEAN, facecolor='lightblue', alpha=0.3)
-        
+
         # Plot the data using pcolormesh for better geographic accuracy
         # Use the appropriate latitude coordinates based on whether data was flipped
         lons_mesh, lats_mesh = np.meshgrid(lons_downsampled, lats_for_mesh)
-        mesh = ax.pcolormesh(lons_mesh, lats_mesh, values_display, 
-                           transform=ccrs.PlateCarree(), 
-                           cmap='viridis', shading='auto')
-        
+        mesh = ax.pcolormesh(lons_mesh, lats_mesh, values_display,
+                             transform=ccrs.PlateCarree(),
+                             cmap='viridis', shading='auto')
+
         # Add colorbar
         cbar = plt.colorbar(mesh, ax=ax, shrink=0.8, pad=0.02)
         cbar.set_label(variable_name, fontsize=14)
-        
+
         # Add gridlines
         gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,
-                         linewidth=0.5, color='gray', alpha=0.5, linestyle='--')
+                          linewidth=0.5, color='gray', alpha=0.5, linestyle='--')
         gl.top_labels = False
         gl.right_labels = False
-        
+
         # Set title
-        ax.set_title(f"{variable_name} Raster", fontsize=16, fontweight='bold', pad=20)
+        ax.set_title(f"{variable_name} Raster",
+                     fontsize=16, fontweight='bold', pad=20)
 
         # Create a temporary directory for images (not in assets)
         import tempfile
@@ -1020,17 +1044,17 @@ class DataManager:
 
         # Save the image to temp directory with higher DPI
         image_path = os.path.join(temp_dir, f'raster_{variable_name}.png')
-        plt.savefig(image_path, dpi=300, bbox_inches='tight', pad_inches=0.1, 
-                   facecolor='white', edgecolor='none')
+        plt.savefig(image_path, dpi=300, bbox_inches='tight', pad_inches=0.1,
+                    facecolor='white', edgecolor='none')
         plt.close()
 
         # Convert to base64 for display in the web app
         import base64
         with open(image_path, "rb") as image_file:
             image_data = base64.b64encode(image_file.read()).decode()
-        
+
         image_src = f"data:image/png;base64,{image_data}"
-        
+
         print("Raster image converted to base64 successfully")
         return image_src
 
@@ -1043,58 +1067,60 @@ class DataManager:
         # Use the same step size for both dimensions to ensure matching shapes
         max_dim_size = max(lats.size, lons.size)
         sample_step = max(1, max_dim_size // 100)
-        print(f"Sampling data with step {sample_step} for 3D globe visualization")
-        
+        print(
+            f"Sampling data with step {sample_step} for 3D globe visualization")
+
         lats_sampled = lats[::sample_step]
         lons_sampled = lons[::sample_step]
         values_sampled = data_array.values[::sample_step, ::sample_step]
-        
-        print(f"Sampled shapes - lats: {lats_sampled.shape}, lons: {lons_sampled.shape}, values: {values_sampled.shape}")
-        
+
+        print(
+            f"Sampled shapes - lats: {lats_sampled.shape}, lons: {lons_sampled.shape}, values: {values_sampled.shape}")
+
         # Create a 3D scatter plot that will appear on the globe surface
         # Convert lat/lon to 3D coordinates on a unit sphere
         lats_rad = np.radians(lats_sampled)
         lons_rad = np.radians(lons_sampled)
-        
+
         # Create meshgrid to ensure proper broadcasting
         lats_mesh, lons_mesh = np.meshgrid(lats_rad, lons_rad, indexing='ij')
-        
+
         # 3D coordinates on unit sphere (radius = 1)
         radius = 1.0
         x = radius * np.cos(lats_mesh) * np.cos(lons_mesh)
         y = radius * np.cos(lats_mesh) * np.sin(lons_mesh)
         z = radius * np.sin(lats_mesh)
-        
+
         # Flatten arrays for scatter plot
         x_flat = x.flatten()
         y_flat = y.flatten()
         z_flat = z.flatten()
         values_flat = values_sampled.flatten()
-        
+
         # Filter out NaN values
         valid_mask = ~np.isnan(values_flat)
         x_valid = x_flat[valid_mask]
         y_valid = y_flat[valid_mask]
         z_valid = z_flat[valid_mask]
         values_valid = values_flat[valid_mask]
-        
+
         print(f"Valid 3D data points: {len(values_valid)}")
-        
+
         # First, add the Earth globe surface
         print("Adding Earth globe surface...")
-        
+
         # Create a basic Earth sphere with landmasses
         # Generate a sphere with more points for better appearance
         phi = np.linspace(0, 2*np.pi, 100)
         theta = np.linspace(-np.pi/2, np.pi/2, 50)
         phi_mesh, theta_mesh = np.meshgrid(phi, theta)
-        
+
         # Convert to Cartesian coordinates
         earth_radius = 0.98  # Slightly smaller than data points
         x_earth = earth_radius * np.cos(theta_mesh) * np.cos(phi_mesh)
         y_earth = earth_radius * np.cos(theta_mesh) * np.sin(phi_mesh)
         z_earth = earth_radius * np.sin(theta_mesh)
-        
+
         # Add the Earth surface
         fig.add_trace(go.Surface(
             x=x_earth,
@@ -1105,7 +1131,7 @@ class DataManager:
             showscale=False,
             name='Earth Surface'
         ))
-        
+
         # Create the 3D scatter plot on the globe
         fig.add_trace(go.Scatter3d(
             x=x_valid,
@@ -1186,7 +1212,7 @@ class DataManager:
             margin=dict(l=0, r=0, t=80, b=0),
             showlegend=False
         )
-        
+
         # Add a note about progressive rendering
         fig.add_annotation(
             text="💡 Tip: Zoom in to see more detail. The globe shows sampled data for performance.",
@@ -1201,7 +1227,8 @@ class DataManager:
         )
 
         print("3D globe with raster overlay created successfully!")
-        print("Note: Future enhancement - progressive rendering will show more detail on zoom")
+        print(
+            "Note: Future enhancement - progressive rendering will show more detail on zoom")
         return fig
 
     def _create_fallback_plot(self, values, variable_name):
@@ -1279,7 +1306,8 @@ class DataManager:
         # 3. Country boundaries - removed for now to focus on core functionality
 
         # 4. Add initial data overlay (coarse for fast loading)
-        data_layer = self._add_data_overlay_progressive(variable_name, data_array, lat_dim, lon_dim)
+        data_layer = self._add_data_overlay_progressive(
+            variable_name, data_array, lat_dim, lon_dim)
         if data_layer:
             layers.append(data_layer)
             print("Added initial data overlay layer")
@@ -1294,10 +1322,10 @@ class DataManager:
 
         # Convert to HTML component for Dash
         basic_deck_html = basic_deck.to_html()
-        
+
         # Create a Dash component that can be embedded
         globe_component = html.Div([
-            html.H3(f"🌍 {variable_name} - Interactive Globe", 
+            html.H3(f"🌍 {variable_name} - Interactive Globe",
                     style={'textAlign': 'center', 'marginBottom': '20px'}),
             html.Div([
                 html.Iframe(
@@ -1319,25 +1347,29 @@ class DataManager:
     def _add_data_overlay_progressive(self, variable_name, data_array, lat_dim, lon_dim):
         """Add data overlay progressively to the existing globe"""
         print("Adding data overlay progressively...")
-        
+
         lats = data_array.coords[lat_dim].values
         lons = data_array.coords[lon_dim].values
 
         # Get the geographic bounds
         lat_min, lat_max = lats.min(), lats.max()
         lon_min, lon_max = lons.min(), lons.max()
-        
-        print(f"Geographic bounds: lat [{lat_min:.4f}, {lat_max:.4f}], lon [{lon_min:.4f}, {lon_max:.4f}]")
+
+        print(
+            f"Geographic bounds: lat [{lat_min:.4f}, {lat_max:.4f}], lon [{lon_min:.4f}, {lon_max:.4f}]")
 
         # Start with very coarse sampling for initial view
         max_dim_size = max(lats.size, lons.size)
-        initial_sample_step = max(1, max_dim_size // 50)  # Very coarse for fast initial load
-        print(f"Initial sampling with step {initial_sample_step} for fast loading")
-        
+        # Very coarse for fast initial load
+        initial_sample_step = max(1, max_dim_size // 50)
+        print(
+            f"Initial sampling with step {initial_sample_step} for fast loading")
+
         lats_sampled = lats[::initial_sample_step]
         lons_sampled = lons[::initial_sample_step]
-        values_sampled = data_array.values[::initial_sample_step, ::initial_sample_step]
-        
+        values_sampled = data_array.values[::initial_sample_step,
+                                           ::initial_sample_step]
+
         # Create initial data points
         data_points = []
         for i in range(lats_sampled.shape[0]):
@@ -1350,12 +1382,12 @@ class DataManager:
                     })
 
         print(f"Created {len(data_points)} initial data points")
-        
+
         # Create a simple data overlay layer
         if data_points:
             try:
                 import pydeck as pdk
-                
+
                 data_layer = pdk.Layer(
                     "ScatterplotLayer",
                     data=data_points,
@@ -1369,17 +1401,19 @@ class DataManager:
                     radius_scale=3,
                     radius_min_pixels=3,
                     radius_max_pixels=8,
-                    color_range=[[0, 0, 255], [0, 255, 0], [255, 0, 0]],  # Blue to Green to Red
-                    color_domain=[min(p['value'] for p in data_points), max(p['value'] for p in data_points)]
+                    color_range=[[0, 0, 255], [0, 255, 0], [
+                        255, 0, 0]],  # Blue to Green to Red
+                    color_domain=[min(p['value'] for p in data_points), max(
+                        p['value'] for p in data_points)]
                 )
-                
+
                 print("Data overlay layer created successfully!")
                 return data_layer
-                
+
             except Exception as e:
                 print(f"Failed to create data overlay: {e}")
                 return None
-        
+
         return None
 
     def _create_coastline_outline(self, continent_type, radius):
@@ -1387,41 +1421,49 @@ class DataManager:
         try:
             if continent_type == 'north_america':
                 # North America - more realistic shape
-                lons = [-140, -130, -120, -110, -100, -90, -80, -70, -60, -50, -60, -70, -80, -90, -100, -110, -120, -130, -140]
-                lats = [60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 15, 20, 25, 30, 35, 40, 45, 50]
-                
+                lons = [-140, -130, -120, -110, -100, -90, -80, -70, -
+                        60, -50, -60, -70, -80, -90, -100, -110, -120, -130, -140]
+                lats = [60, 55, 50, 45, 40, 35, 30, 25, 20,
+                        15, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+
             elif continent_type == 'europe_asia':
                 # Europe/Asia - more realistic shape
-                lons = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180]
-                lats = [70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0, -5, -10, -15, -20]
-                
+                lons = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90,
+                        100, 110, 120, 130, 140, 150, 160, 170, 180]
+                lats = [70, 65, 60, 55, 50, 45, 40, 35, 30,
+                        25, 20, 15, 10, 5, 0, -5, -10, -15, -20]
+
             elif continent_type == 'africa':
                 # Africa - more realistic shape
-                lons = [-20, -10, 0, 10, 20, 30, 40, 50, 40, 30, 20, 10, 0, -10, -20]
-                lats = [35, 30, 25, 20, 15, 10, 5, 0, -5, -10, -15, -20, -25, -30, -35]
-                
+                lons = [-20, -10, 0, 10, 20, 30, 40,
+                        50, 40, 30, 20, 10, 0, -10, -20]
+                lats = [35, 30, 25, 20, 15, 10, 5,
+                        0, -5, -10, -15, -20, -25, -30, -35]
+
             elif continent_type == 'south_america':
                 # South America - more realistic shape
-                lons = [-80, -70, -60, -50, -40, -30, -20, -10, -20, -30, -40, -50, -60, -70, -80]
-                lats = [10, 5, 0, -5, -10, -15, -20, -25, -30, -35, -40, -45, -50, -55, -60]
-                
+                lons = [-80, -70, -60, -50, -40, -30, -20, -
+                        10, -20, -30, -40, -50, -60, -70, -80]
+                lats = [10, 5, 0, -5, -10, -15, -20, -
+                        25, -30, -35, -40, -45, -50, -55, -60]
+
             elif continent_type == 'australia':
                 # Australia - more realistic shape
                 lons = [110, 120, 130, 140, 150, 160, 150, 140, 130, 120, 110]
                 lats = [-10, -15, -20, -25, -30, -35, -40, -35, -30, -25, -20]
-                
+
             else:
                 return None
-            
+
             # Convert to radians
             lons_rad = np.radians(lons)
             lats_rad = np.radians(lats)
-            
+
             # Convert to 3D coordinates
             x_coast = radius * np.cos(lats_rad) * np.cos(lons_rad)
             y_coast = radius * np.cos(lats_rad) * np.sin(lons_rad)
             z_coast = radius * np.sin(lats_rad)
-            
+
             # Create a line trace for the coastline
             return go.Scatter3d(
                 x=x_coast,
@@ -1443,52 +1485,52 @@ class DataManager:
     def _create_fallback_3d_globe(self, variable_name, data_array, lat_dim, lon_dim):
         """Fallback to basic 3D globe if deck.gl is not available"""
         print("Creating fallback 3D globe...")
-        
+
         lats = data_array.coords[lat_dim].values
         lons = data_array.coords[lon_dim].values
 
         # Sample the data for better performance
         max_dim_size = max(lats.size, lons.size)
         sample_step = max(1, max_dim_size // 100)
-        
+
         lats_sampled = lats[::sample_step]
         lons_sampled = lons[::sample_step]
         values_sampled = data_array.values[::sample_step, ::sample_step]
-        
+
         # Create a 3D scatter plot on a sphere
         lats_rad = np.radians(lats_sampled)
         lons_rad = np.radians(lons_sampled)
-        
+
         lats_mesh, lons_mesh = np.meshgrid(lats_rad, lons_rad, indexing='ij')
-        
+
         radius = 1.0
         x = radius * np.cos(lats_mesh) * np.cos(lons_mesh)
         y = radius * np.cos(lats_mesh) * np.sin(lons_mesh)
         z = radius * np.sin(lats_mesh)
-        
+
         x_flat = x.flatten()
         y_flat = y.flatten()
         z_flat = z.flatten()
         values_flat = values_sampled.flatten()
-        
+
         valid_mask = ~np.isnan(values_flat)
         x_valid = x_flat[valid_mask]
         y_valid = y_flat[valid_mask]
         z_valid = z_flat[valid_mask]
         values_valid = values_flat[valid_mask]
-        
+
         fig = go.Figure()
-        
+
         # Add Earth surface with realistic oceans and land
         phi = np.linspace(0, 2*np.pi, 200)
         theta = np.linspace(-np.pi/2, np.pi/2, 100)
         phi_mesh, theta_mesh = np.meshgrid(phi, theta)
-        
+
         earth_radius = 0.98
         x_earth = earth_radius * np.cos(theta_mesh) * np.cos(phi_mesh)
         y_earth = earth_radius * np.cos(theta_mesh) * np.sin(phi_mesh)
         z_earth = earth_radius * np.sin(theta_mesh)
-        
+
         # Create a fast, realistic Earth using simple vector overlays
         # Start with a clean blue ocean base
         fig.add_trace(go.Surface(
@@ -1500,33 +1542,33 @@ class DataManager:
             showscale=False,
             name='Ocean Base'
         ))
-        
+
         # Add continent outlines using realistic geographic shapes
         # North America coastline
         na_coast = self._create_coastline_outline('north_america', 0.99)
         if na_coast:
             fig.add_trace(na_coast)
-        
+
         # Europe/Asia coastline
         eu_coast = self._create_coastline_outline('europe_asia', 0.99)
         if eu_coast:
             fig.add_trace(eu_coast)
-        
+
         # Africa coastline
         af_coast = self._create_coastline_outline('africa', 0.99)
         if af_coast:
             fig.add_trace(af_coast)
-        
+
         # South America coastline
         sa_coast = self._create_coastline_outline('south_america', 0.99)
         if sa_coast:
             fig.add_trace(sa_coast)
-        
+
         # Australia
         au_coast = self._create_coastline_outline('australia', 0.99)
         if au_coast:
             fig.add_trace(au_coast)
-        
+
         # Add data points
         if len(values_valid) > 0:
             fig.add_trace(go.Scatter3d(
@@ -1551,7 +1593,7 @@ class DataManager:
                 hoverinfo='text',
                 name=variable_name
             ))
-        
+
         fig.update_layout(
             title=dict(
                 text=f"🌍 {variable_name} - Enhanced 3D Globe",
@@ -1562,57 +1604,62 @@ class DataManager:
             height=800,
             width=None,
             scene=dict(
-                xaxis=dict(showgrid=False, showticklabels=False, range=[-1.2, 1.2]),
-                yaxis=dict(showgrid=False, showticklabels=False, range=[-1.2, 1.2]),
-                zaxis=dict(showgrid=False, showticklabels=False, range=[-1.2, 1.2]),
+                xaxis=dict(showgrid=False, showticklabels=False,
+                           range=[-1.2, 1.2]),
+                yaxis=dict(showgrid=False, showticklabels=False,
+                           range=[-1.2, 1.2]),
+                zaxis=dict(showgrid=False, showticklabels=False,
+                           range=[-1.2, 1.2]),
                 aspectmode='data',
                 camera=dict(eye=dict(x=1.5, y=1.5, z=1.5))
             ),
             margin=dict(l=0, r=0, t=80, b=0),
             showlegend=False
         )
-        
+
         return fig
 
     def _create_mapbox_globe(self, variable_name, data_array, lat_dim, lon_dim):
         """Create a Mapbox 3D globe with data overlay"""
         print("Creating Mapbox 3D globe...")
-        
+
         # Load Mapbox API token from environment file
         try:
             import os
             from dotenv import load_dotenv
-            
+
             # Load the Mapbox API token from the credentials file
-            creds_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'creds', 'mapboxapi.env')
+            creds_path = os.path.join(os.path.dirname(
+                __file__), '..', 'data', 'creds', 'mapboxapi.env')
             load_dotenv(creds_path)
-            
+
             mapbox_token = os.getenv('MAPBOX_API_TOKEN')
             if not mapbox_token:
                 print("Warning: MAPBOX_API_TOKEN not found, falling back to basic globe")
                 return self._create_fallback_3d_globe(variable_name, data_array, lat_dim, lon_dim)
-                
+
             print("Mapbox API token loaded successfully")
-            
+
         except Exception as e:
-            print(f"Error loading Mapbox token: {e}, falling back to basic globe")
+            print(
+                f"Error loading Mapbox token: {e}, falling back to basic globe")
             return self._create_fallback_3d_globe(variable_name, data_array, lat_dim, lon_dim)
-        
+
         lats = data_array.coords[lat_dim].values
         lons = data_array.coords[lon_dim].values
-        
+
         # Get geographic bounds
         lat_min, lat_max = lats.min(), lats.max()
         lon_min, lon_max = lons.min(), lons.max()
-        
+
         # Sample data for performance
         max_dim_size = max(lats.size, lons.size)
         sample_step = max(1, max_dim_size // 100)
-        
+
         lats_sampled = lats[::sample_step]
         lons_sampled = lons[::sample_step]
         values_sampled = data_array.values[::sample_step, ::sample_step]
-        
+
         # Create data points for overlay
         data_points = []
         for i in range(lats_sampled.shape[0]):
@@ -1623,10 +1670,10 @@ class DataManager:
                         'lon': float(lons_sampled[j]),
                         'value': float(values_sampled[i, j])
                     })
-        
+
         # Create a 3D globe figure using Plotly's built-in 3D projection
         fig = go.Figure()
-        
+
         # Add the data as a 3D scatter plot on a sphere
         if data_points:
             # Convert lat/lon to 3D coordinates on a sphere
@@ -1635,20 +1682,20 @@ class DataManager:
             y_coords = []
             z_coords = []
             values = []
-            
+
             for point in data_points:
                 lat_rad = np.radians(point['lat'])
                 lon_rad = np.radians(point['lon'])
-                
+
                 x = radius * np.cos(lat_rad) * np.cos(lon_rad)
                 y = radius * np.cos(lat_rad) * np.sin(lon_rad)
                 z = radius * np.sin(lat_rad)
-                
+
                 x_coords.append(x)
                 y_coords.append(y)
                 z_coords.append(z)
                 values.append(point['value'])
-            
+
             fig.add_trace(go.Scatter3d(
                 x=x_coords,
                 y=y_coords,
@@ -1665,18 +1712,18 @@ class DataManager:
                 hoverinfo='text',
                 name=variable_name
             ))
-        
+
         # Add a base Earth sphere with Mapbox satellite texture
         # Create a sphere surface
         phi = np.linspace(0, 2*np.pi, 100)
         theta = np.linspace(-np.pi/2, np.pi/2, 50)
         phi_mesh, theta_mesh = np.meshgrid(phi, theta)
-        
+
         earth_radius = 0.98
         x_earth = earth_radius * np.cos(theta_mesh) * np.cos(phi_mesh)
         y_earth = earth_radius * np.cos(theta_mesh) * np.sin(phi_mesh)
         z_earth = earth_radius * np.sin(theta_mesh)
-        
+
         # Add Earth surface with realistic colors
         fig.add_trace(go.Surface(
             x=x_earth,
@@ -1687,14 +1734,17 @@ class DataManager:
             showscale=False,
             name='Earth Surface'
         ))
-        
+
         # Configure the 3D scene for globe view
         fig.update_layout(
             title=f"🌍 {variable_name} - Globe",
             scene=dict(
-                xaxis=dict(showgrid=False, showticklabels=False, range=[-1.2, 1.2]),
-                yaxis=dict(showgrid=False, showticklabels=False, range=[-1.2, 1.2]),
-                zaxis=dict(showgrid=False, showticklabels=False, range=[-1.2, 1.2]),
+                xaxis=dict(showgrid=False, showticklabels=False,
+                           range=[-1.2, 1.2]),
+                yaxis=dict(showgrid=False, showticklabels=False,
+                           range=[-1.2, 1.2]),
+                zaxis=dict(showgrid=False, showticklabels=False,
+                           range=[-1.2, 1.2]),
                 aspectmode='data',
                 camera=dict(eye=dict(x=1.5, y=1.5, z=1.5))
             ),
@@ -1702,7 +1752,7 @@ class DataManager:
             margin=dict(l=0, r=0, t=80, b=0),
             showlegend=False
         )
-        
+
         print("Mapbox 3D globe created successfully!")
         return fig
 
@@ -1718,7 +1768,8 @@ class DataManager:
                     "geometry": {
                         "type": "Polygon",
                         "coordinates": [[
-                            [-170, 50], [-60, 50], [-60, 25], [-80, 15], [-170, 15], [-170, 50]
+                            [-170, 50], [-60, 50], [-60, 25], [-80,
+                                                               15], [-170, 15], [-170, 50]
                         ]]
                     }
                 },
@@ -1758,7 +1809,8 @@ class DataManager:
                     "geometry": {
                         "type": "Polygon",
                         "coordinates": [[
-                            [40, 70], [180, 70], [180, 15], [100, 15], [40, 15], [40, 70]
+                            [40, 70], [180, 70], [180, 15], [
+                                100, 15], [40, 15], [40, 70]
                         ]]
                     }
                 },
@@ -1768,7 +1820,8 @@ class DataManager:
                     "geometry": {
                         "type": "Polygon",
                         "coordinates": [[
-                            [110, -10], [155, -10], [155, -45], [110, -45], [110, -10]
+                            [110, -10], [155, -10], [155, -
+                                                     45], [110, -45], [110, -10]
                         ]]
                     }
                 },
@@ -1778,7 +1831,8 @@ class DataManager:
                     "geometry": {
                         "type": "Polygon",
                         "coordinates": [[
-                            [-180, -60], [180, -60], [180, -90], [-180, -90], [-180, -60]
+                            [-180, -60], [180, -60], [180, -
+                                                      90], [-180, -90], [-180, -60]
                         ]]
                     }
                 }
@@ -1797,7 +1851,8 @@ class DataManager:
                     "geometry": {
                         "type": "Polygon",
                         "coordinates": [[
-                            [100, 70], [180, 70], [180, -60], [100, -60], [100, 70]
+                            [100, 70], [180, 70], [
+                                180, -60], [100, -60], [100, 70]
                         ]]
                     }
                 },
@@ -1827,7 +1882,8 @@ class DataManager:
                     "geometry": {
                         "type": "Polygon",
                         "coordinates": [[
-                            [-180, 70], [180, 70], [180, 90], [-180, 90], [-180, 70]
+                            [-180, 70], [180, 70], [180,
+                                                    90], [-180, 90], [-180, 70]
                         ]]
                     }
                 }
@@ -1845,7 +1901,8 @@ class DataManager:
             if response.status_code == 200:
                 return response.json()
             else:
-                print(f"Failed to fetch countries data: {response.status_code}")
+                print(
+                    f"Failed to fetch countries data: {response.status_code}")
                 return self._get_simple_countries_geojson()
         except Exception as e:
             print(f"Error fetching countries data: {e}")
@@ -1863,12 +1920,19 @@ class DataManager:
                         "type": "MultiPolygon",
                         "coordinates": [
                             # Simplified continent boundaries
-                            [[[-180, -60], [-60, -60], [-60, 0], [-180, 0], [-180, -60]]],  # South America
-                            [[[-180, 0], [-60, 0], [-60, 60], [-180, 60], [-180, 0]]],      # North America
-                            [[[-60, 0], [60, 0], [60, 60], [-60, 60], [-60, 0]]],           # Europe/Asia
-                            [[[60, 0], [180, 0], [180, 60], [60, 60], [60, 0]]],            # Asia
-                            [[[-60, -60], [60, -60], [60, 0], [-60, 0], [-60, -60]]],       # Africa
-                            [[[60, -60], [180, -60], [180, 0], [60, 0], [60, -60]]]         # Australia
+                            # South America
+                            [[[-180, -60], [-60, -60], [-60, 0],
+                                [-180, 0], [-180, -60]]],
+                            # North America
+                            [[[-180, 0], [-60, 0], [-60, 60], [-180, 60], [-180, 0]]],
+                            # Europe/Asia
+                            [[[-60, 0], [60, 0], [60, 60], [-60, 60], [-60, 0]]],
+                            # Asia
+                            [[[60, 0], [180, 0], [180, 60], [60, 60], [60, 0]]],
+                            # Africa
+                            [[[-60, -60], [60, -60], [60, 0], [-60, 0], [-60, -60]]],
+                            # Australia
+                            [[[60, -60], [180, -60], [180, 0], [60, 0], [60, -60]]]
                         ]
                     }
                 }
@@ -1879,55 +1943,61 @@ class DataManager:
         """Create an enhanced Earth texture with realistic land/water patterns"""
         # This creates a more realistic Earth appearance with elevation-based coloring
         import numpy as np
-        
+
         # Create a high-resolution grid for the Earth surface
         phi = np.linspace(0, 2*np.pi, 360)  # Longitude
         theta = np.linspace(-np.pi/2, np.pi/2, 180)  # Latitude
-        
+
         phi_mesh, theta_mesh = np.meshgrid(phi, theta)
-        
+
         # Convert to degrees for easier calculations
         lat_deg = np.degrees(theta_mesh)
         lon_deg = np.degrees(phi_mesh)
-        
+
         # Create elevation-based coloring
         # Simulate continents and oceans based on latitude/longitude patterns
         elevation = np.zeros_like(lat_deg)
-        
+
         # North America (rough approximation)
-        na_mask = (lon_deg >= -170) & (lon_deg <= -50) & (lat_deg >= 15) & (lat_deg <= 70)
+        na_mask = (lon_deg >= -170) & (lon_deg <= -
+                                       50) & (lat_deg >= 15) & (lat_deg <= 70)
         elevation[na_mask] = 0.3  # Land elevation
-        
+
         # South America
-        sa_mask = (lon_deg >= -80) & (lon_deg <= -35) & (lat_deg >= -55) & (lat_deg <= 15)
+        sa_mask = (lon_deg >= -80) & (lon_deg <= -
+                                      35) & (lat_deg >= -55) & (lat_deg <= 15)
         elevation[sa_mask] = 0.3
-        
+
         # Europe
-        eu_mask = (lon_deg >= -10) & (lon_deg <= 40) & (lat_deg >= 35) & (lat_deg <= 70)
+        eu_mask = (lon_deg >= -10) & (lon_deg <=
+                                      40) & (lat_deg >= 35) & (lat_deg <= 70)
         elevation[eu_mask] = 0.3
-        
+
         # Africa
-        af_mask = (lon_deg >= -20) & (lon_deg <= 50) & (lat_deg >= -35) & (lat_deg <= 35)
+        af_mask = (lon_deg >= -20) & (lon_deg <=
+                                      50) & (lat_deg >= -35) & (lat_deg <= 35)
         elevation[af_mask] = 0.3
-        
+
         # Asia
-        asia_mask = (lon_deg >= 40) & (lon_deg <= 180) & (lat_deg >= 15) & (lat_deg <= 70)
+        asia_mask = (lon_deg >= 40) & (lon_deg <= 180) & (
+            lat_deg >= 15) & (lat_deg <= 70)
         elevation[asia_mask] = 0.3
-        
+
         # Australia
-        aus_mask = (lon_deg >= 110) & (lon_deg <= 155) & (lat_deg >= -45) & (lat_deg <= -10)
+        aus_mask = (lon_deg >= 110) & (lon_deg <= 155) & (
+            lat_deg >= -45) & (lat_deg <= -10)
         elevation[aus_mask] = 0.3
-        
+
         # Antarctica
         ant_mask = (lat_deg <= -60)
         elevation[ant_mask] = 0.4  # Higher elevation for ice
-        
+
         # Add some noise for more realistic appearance
         np.random.seed(42)  # For reproducible results
         noise = np.random.normal(0, 0.05, elevation.shape)
         elevation += noise
         elevation = np.clip(elevation, 0, 1)
-        
+
         return phi_mesh, theta_mesh, elevation
 
 
