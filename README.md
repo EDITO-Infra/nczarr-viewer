@@ -6,12 +6,11 @@ A powerful web application for exploring and visualizing geospatial NetCDF and Z
 
 ## ✨ Features
 
-- **🌍 Multi-Format Support**: NetCDF, Zarr, HDF5, and GRIB files
+- **🌍 Multi-Format Support**: NetCDF, Zarr datasets
 - **☁️ Cloud Storage**: Direct S3, Minio, and cloud storage access
 - **🌊 Marine Data**: Copernicus Marine Service (CMEMS) integration
 - **📊 Interactive Visualization**: Dynamic plotting with Plotly and Matplotlib
 - **🔍 Smart Data Exploration**: Variable browsing, dimension filtering, and statistics
-- **📱 Responsive Design**: Works on desktop, tablet, and mobile devices
 - **🐳 Docker Ready**: Containerized for easy deployment
 
 ## 🚀 Quick Start
@@ -79,14 +78,14 @@ export CMEMS_PASSWORD=your_password
 ### Quick Docker Run
 ```bash
 # Pull and run the latest image
-docker run -p 8050:8050 samfooks/zarr-netcdf-viewer:latest
+docker run -p 8050:8050 samfooks/nczarr-viewer:latest
 ```
 
 ### With Local Files
 ```bash
 # Mount a local directory with NetCDF files
 docker run -v $(pwd)/myfiles:/app/myfiles -p 8050:8050 \
-  samfooks/zarr-netcdf-viewer:latest
+  samfooks/nczarr-viewer:latest
 ```
 
 ### Accessing Data
@@ -103,7 +102,7 @@ Once the container is running:
 ```
 nczarr-viewer/
 ├── src/                    # Source code
-│   ├── zarr_data_viewer.py    # Main Dash application
+│   ├── main.py               # Main Dash application
 │   ├── data.py               # Data loading and processing
 │   ├── variables.py           # Variable selection logic
 │   ├── dimension.py           # Dimension handling
@@ -152,7 +151,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Samuel Fooks** - [samuel.fooks@gmail.com](mailto:samuel.fooks@gmail.com)
 
 - **GitHub**: [https://github.com/samuelfooks/nczarr-viewer](https://github.com/samuelfooks/nczarr-viewer)
-- **Docker Hub**: [samfooks/zarr-netcdf-viewer](https://hub.docker.com/r/samfooks/zarr-netcdf-viewer)
+- **Docker Hub**: [samfooks/nczarr-viewer](https://hub.docker.com/r/samfooks/nczarr-viewer)
 
 ## 🆘 Support
 

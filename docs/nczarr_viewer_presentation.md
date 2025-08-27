@@ -54,10 +54,10 @@ author: Samuel Fooks
 
 ```bash
 # Option 1: Use Docker
-docker run -p 8050:8050 samfooks/zarr-netcdf-viewer:latest
+docker run -p 8050:8050 samfooks/nczarr-viewer:latest
 
 # Option 2: Local development (if you have Python)
-git clone https://github.com/samuelfooks/nczarr-viewer
+git clone https://[github.com/samuelfooks/nczarr-viewer](https://github.com/EDITO-Infra/nczarr-viewer)
 cd nczarr-viewer
 pip install -r requirements.txt
 python run.py
@@ -162,7 +162,7 @@ docker run -p 8050:8050 nczarr-viewer
 # 🌊 Thank You!
 
 **Samuel Fooks** - samuel.fooks@vliz.be 
-**GitHub**: [https://github.com/EDITO-Infra/nczarr-viewer](https://github.com/EDITO-Infra/nczarr-viewer)
-**Docker Hub**: samfooks/zarr-netcdf-viewer
+**GitHub**: [https://github.com/samuelfooks/nczarr-viewer](https://github.com/samuelfooks/nczarr-viewer)
+**Docker Hub**: samfooks/nczarr-viewer
 
 **Questions?**
