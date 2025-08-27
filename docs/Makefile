@@ -25,6 +25,8 @@ presentationpdf: nczarr_viewer_presentation.pdf
 # Build HTML presentation
 presentationhtml: $(BUILDDIR)/html
 	marp nczarr_viewer_presentation.md --output $(BUILDDIR)/html/nczarr_viewer_presentation.html
+	@mkdir -p $(BUILDDIR)/html/static
+	@cp $(SOURCEDIR)/static/*.mp4 $(BUILDDIR)/html/static/
 
 # Ensure build/html directory exists
 $(BUILDDIR)/html:
