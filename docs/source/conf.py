@@ -31,7 +31,11 @@ build_dir = 'build'
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'sphinx_rtd_theme'
-html_static_path = ['../static']
+
+# Static files configuration
+html_static_path = ['static']    # This is the correct path for GitHub Pages
+
+# Custom static files
 html_css_files = ['custom.css']
 html_js_files = ['custom.js', 'redirect.js']
 
