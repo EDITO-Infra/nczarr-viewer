@@ -31,7 +31,7 @@ build_dir = 'build'
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'sphinx_rtd_theme'
-html_static_path = ['static']
+html_static_path = ['../static']
 html_css_files = ['custom.css']
 html_js_files = ['custom.js', 'redirect.js']
 
