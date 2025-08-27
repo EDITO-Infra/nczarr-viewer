@@ -17,11 +17,13 @@ release = '0.1.0'
 
 # Get git remote URL dynamically
 try:
-    git_remote = subprocess.check_output(['git', 'remote', 'get-url', 'origin'], 
-                                       cwd=os.path.dirname(os.path.dirname(__file__)), 
-                                       text=True).strip()
+    git_remote = subprocess.check_output(
+        ['git', 'remote', 'get-url', 'origin'],
+        cwd=os.path.dirname(os.path.dirname(__file__)),
+        text=True
+    ).strip()
     repo_url = git_remote.replace('.git', '')
-except:
+except Exception:
     repo_url = 'https://github.com/EDITO-Infra/nczarr-viewer'  # fallback
 
 # -- General configuration ---------------------------------------------------
@@ -37,6 +39,9 @@ extensions = [
 rst_epilog = f"""
 .. |repo_url| replace:: {repo_url}
 """
+
+# Theme configuration
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options
 html_theme_options = {
