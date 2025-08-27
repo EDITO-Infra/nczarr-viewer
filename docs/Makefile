@@ -17,7 +17,7 @@ html:
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 # Build both docs and presentation
-all: presentationhtml html
+all: presentationhtml html presentationpdf
 
 # Build PDF presentation
 presentationpdf: nczarr_viewer_presentation.pdf
