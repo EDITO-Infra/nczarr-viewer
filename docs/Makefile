@@ -23,15 +23,20 @@ all: presentationhtml html
 presentationpdf: nczarr_viewer_presentation.pdf
 
 # Build HTML presentation
-presentationhtml: nczarr_viewer_presentation.html
+presentationhtml: $(BUILDDIR)/html
+	marp nczarr_viewer_presentation.md --output $(BUILDDIR)/html/nczarr_viewer_presentation.html
+
+# Ensure build/html directory exists
+$(BUILDDIR)/html:
+	@mkdir -p $@
 
 # Rule to build PDF from markdown using pandoc
 nczarr_viewer_presentation.pdf: nczarr_viewer_presentation.md
 	marp $< --output $@
 
-# Rule to build HTML from markdown using Marp in the same directory
+# Rule to build HTML from markdown using Marp in build/html directory (for direct use)
 nczarr_viewer_presentation.html: nczarr_viewer_presentation.md
-	marp $< --output $@
+	marp $< --output $(BUILDDIR)/html/$@
 
 # Sphinx targets - route all unknown targets to Sphinx using the "make mode" option
 # $(O) is meant as a shortcut for $(SPHINXOPTS).
