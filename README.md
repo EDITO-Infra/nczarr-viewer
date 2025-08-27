@@ -1,4 +1,4 @@
-# Dash NCZarr Viewer
+# NCZarr Viewer
 
 ### A Modern, Interactive NetCDF and Zarr Dataset Viewer
 
@@ -23,8 +23,8 @@ A powerful web application for exploring and visualizing geospatial NetCDF and Z
 ### Option 1: Using uv (Recommended)
 ```bash
 # Clone the repository
-git clone https://github.com/samuelfooks/dash_nczarr_viewer.git
-cd dash_nczarr_viewer
+git clone https://github.com/samuelfooks/nczarr-viewer.git
+cd nczarr-viewer
 
 # Install dependencies and run
 uv sync
@@ -34,8 +34,8 @@ python run.py
 ### Option 2: Using pip
 ```bash
 # Clone the repository
-git clone https://github.com/samuelfooks/dash_nczarr_viewer.git
-cd dash_nczarr_viewer
+git clone https://github.com/samuelfooks/nczarr-viewer.git
+cd nczarr-viewer
 
 # Install in development mode
 pip install -e .
@@ -101,7 +101,7 @@ Once the container is running:
 
 ### Project Structure
 ```
-dash-nczarr-viewer/
+nczarr-viewer/
 ├── src/                    # Source code
 │   ├── zarr_data_viewer.py    # Main Dash application
 │   ├── data.py               # Data loading and processing
@@ -132,7 +132,7 @@ dash-nczarr-viewer/
 ## 📚 Documentation
 
 - **API Reference**: See `docs/source/` for detailed documentation
-- **Presentation**: Check `docs/dash_nczarr_viewer_presentation.md` for usage examples
+- **Presentation**: Check `docs/nczarr_viewer_presentation.md` for usage examples
 - **Examples**: Explore `docs/explore_data/` for sample datasets and workflows
 
 ## 🤝 Contributing
@@ -151,12 +151,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Samuel Fooks** - [samuel.fooks@gmail.com](mailto:samuel.fooks@gmail.com)
 
-- **GitHub**: [https://github.com/samuelfooks/dash_nczarr_viewer](https://github.com/samuelfooks/dash_nczarr_viewer)
+- **GitHub**: [https://github.com/samuelfooks/nczarr-viewer](https://github.com/samuelfooks/nczarr-viewer)
 - **Docker Hub**: [samfooks/zarr-netcdf-viewer](https://hub.docker.com/r/samfooks/zarr-netcdf-viewer)
 
 ## 🆘 Support
 
-- **Issues**: [GitHub Issues](https://github.com/samuelfooks/dash_nczarr_viewer/issues)
+- **Issues**: [GitHub Issues](https://github.com/samuelfooks/nczarr-viewer/issues)
 - **Documentation**: Check the `docs/` folder
 - **Examples**: See `docs/explore_data/` for sample workflows
 

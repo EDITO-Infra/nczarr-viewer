@@ -2,50 +2,30 @@
 
 This directory contains the documentation for the NCZarr Viewer project.
 
+## Available Documentation
+
+- **HTML Presentation**: Open `nczarr_viewer_presentation.html` in your browser
+- **PDF Presentation**: Open `nczarr_viewer_presentation.pdf`
+
 ## Building Documentation
 
-To build all documentation, run from the `docs` directory:
+To rebuild the documentation:
 
 ```bash
-make doall
+# Build HTML documentation
+make html
+
+# Build PDF documentation  
+make pdf
+
+# Clean build artifacts
+make clean
 ```
 
-This will:
-- Generate Sphinx HTML documentation in `build/html/`
-- Generate PDF presentation from Marp markdown
-- Generate HTML presentation from Marp markdown
+## Documentation Structure
 
-## Individual Build Targets
-
-- `make sphinx` - Build only Sphinx HTML documentation
-- `make pdf` - Generate only PDF presentation
-- `make html` - Generate only HTML presentation
-- `make clean` - Remove all generated files
-
-## Viewing Documentation
-
-After building, you can view the documentation:
-
-- **Sphinx Docs**: Open `build/html/index.html` in your browser
-- **HTML Presentation**: Open `dash_nczarr_viewer_presentation.html` in your browser
-- **PDF Presentation**: Open `dash_nczarr_viewer_presentation.pdf`
-
-## GitHub Pages
-
-The documentation is configured to work with GitHub Pages. The main entry point (`index.html`) will automatically redirect to the built Sphinx documentation.
-
-## Requirements
-
-- Python 3.10+ with virtual environment
-- Marp CLI for presentation generation
-- Sphinx with Read the Docs theme
-
-## Installation
-
-```bash
-# Install Marp CLI (if not already installed)
-make install-marp
-
-# Check if Marp is installed
-make check-marp
-```
+- `source/` - Sphinx source files
+- `build/` - Built documentation output
+- `nczarr_viewer_presentation.md` - Marp presentation source
+- `nczarr_viewer_presentation.html` - Built HTML presentation
+- `nczarr_viewer_presentation.pdf` - Built PDF presentation

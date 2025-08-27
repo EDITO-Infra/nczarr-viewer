@@ -58,7 +58,7 @@ docker run -p 8050:8050 samfooks/zarr-netcdf-viewer:latest
 
 # Option 2: Local development (if you have Python)
 git clone https://github.com/samuelfooks/nczarr-viewer
-cd dash_nczarr-viewer
+cd nczarr-viewer
 pip install -r requirements.txt
 python run.py
 ```
