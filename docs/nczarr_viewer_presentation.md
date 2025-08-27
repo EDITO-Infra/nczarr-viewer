@@ -134,7 +134,7 @@ docker run -p 8050:8050 nczarr-viewer
 # 🌊 Use the NCZarr Viewer locally or on EDITO
 <div style="text-align: center; margin: 20px 0;">
   <video width="70%" controls>
-    <source src="../../../assets/nczarrviewer_localoredito.mp4" type="video/mp4">
+    <source src="../../source/static/nczarrviewer_localoredito.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 </div>
@@ -147,7 +147,7 @@ docker run -p 8050:8050 nczarr-viewer
 
 <div style="text-align: center; margin: 20px 0;">
   <video width="70%" controls>
-    <source src="../../../assets/nczarrviewer_minionetcdf.mp4" type="video/mp4">
+    <source src="../../source/static/nczarrviewer_minionetcdf.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 </div>
@@ -161,7 +161,7 @@ docker run -p 8050:8050 nczarr-viewer
 
 <div style="text-align: center; margin: 20px 0;">
   <video width="70%" controls>
-    <source src="../../../assets/nczarrviewer_cmems.mp4" type="video/mp4">
+    <source src="../../source/static/nczarrviewer_cmems.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 </div>
