@@ -71,7 +71,7 @@ python run.py
 
 # 📁 Supported Data Sources
 
-- **EDITO Integration**: ARCO datasets from the EDITO STAC
+- **ARCO data on EDITO**: ARCO datasets from the EDITO STAC
 - **Personal Cloud Storage**: [Minio storage](https://datalab.dive.edito.eu/file-explorer) on EDITO
 - **Local Files**: NetCDF, Zarr
 
@@ -131,6 +131,67 @@ docker run -p 8050:8050 nczarr-viewer
 ```
 
 ---
+
+# 🔍 Subsetting ARCO Data: Core Concepts
+## Multidimensional Data Structure
+```
+┌─────────────────────────────────────────────────────────┐
+│                    ARCO Dataset                        │
+├─────────────────────────────────────────────────────────┤
+│  Variables: temperature, salinity, oxygen, etc.        │
+│  Dimensions: time, depth, latitude, longitude          │
+│  Shape: (time: 365, depth: 50, lat: 1800, lon: 3600) │
+└─────────────────────────────────────────────────────────┘
+```
+### Subsetting Operations
+- **Variable**: Pick specific parameters
+- **Temporal**: Select specific dates
+- **Spatial**: Choose latitude/longitude boundaries
+- **Depth**: Select depth(elevation)
+
+---
+
+# 🎯 Subsetting in Practice
+
+## Example: Extract Surface Temperature for North Sea
+```python
+import xarray as xr
+
+# Load ARCO dataset
+ds = xr.open_zarr("s3://arco-data/ocean-temp.zarr")
+
+# Variable: surface temperature
+temp_surface = ds['temperature'].sel(depth=0)
+
+# Temporal: August 30
+august30_data = temp_surface.sel(
+    time='2025-08-30'
+)
+# Spatial bounds: North Sea region
+north_sea = august30_data.sel(
+    latitude=slice(51.0, 61.0),    # 51°N to 61°N
+    longitude=slice(-5.0, 15.0)    # 5°W to 15°E
+)
+
+```
+
+---
+
+## Visual Representation
+```
+┌─────────────────────────────────────────────────────────┐
+│  Original: 365×50×1800×3600                           │
+│  ↓ Variable selection                                  │
+│  Surface: 365×1×1800×3600                             │
+│  ↓ Temporal subset                                     │
+│  August 30, 2025: 1×1×1800×3600                       │
+│  ↓ Spatial subset                                      │
+│  North Sea region: 1×1×100×200                        │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
 # 🌊 Use the NCZarr Viewer locally or on EDITO
 <div style="text-align: center; margin: 20px 0;">
   <video width="70%" controls>
@@ -178,7 +239,6 @@ docker run -p 8050:8050 nczarr-viewer
 - **Collaboration**: Multi-user editing and sharing
 
 ---
-
 # 🌊 Thank You!
 
 **Samuel Fooks** - samuel.fooks@vliz.be 
@@ -186,3 +246,6 @@ docker run -p 8050:8050 nczarr-viewer
 **Docker Hub**: samfooks/nczarr-viewer
 
 **Questions?**
+
+---
+
