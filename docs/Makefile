@@ -21,7 +21,7 @@ all: presentationhtml presentationpdf html
 
 # Build PDF presentation
 presentationpdf: $(BUILDDIR)/html
-	marp nczarr_viewer_presentation.md --output  $(BUILDDIR)/html/nczarr_viewer_presentation.pdf --timeout 60000
+	marp nczarr_viewer_presentation.md --output  $(BUILDDIR)/html/nczarr_viewer_presentation.pdf --browser-timeout 120
 
 # Build HTML presentation
 presentationhtml: $(BUILDDIR)/html
