@@ -17,11 +17,11 @@ html:
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 # Build both docs and presentation
-all: presentationhtml presentationpdf html
+all: presentationhtml html
 
 # Build PDF presentation
 presentationpdf: $(BUILDDIR)/html
-	marp nczarr_viewer_presentation.md --output  $(BUILDDIR)/html/nczarr_viewer_presentation.pdf
+	marp nczarr_viewer_presentation.md --output  $(BUILDDIR)/html/nczarr_viewer_presentation.pdf --timeout 60000
 
 # Build HTML presentation
 presentationhtml: $(BUILDDIR)/html
