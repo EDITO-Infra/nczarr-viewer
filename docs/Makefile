@@ -20,12 +20,12 @@ html:
 all: presentationhtml presentationpdf html
 
 # Build PDF presentation
-presentationpdf: $(BUILDDIR)/html
-	marp nczarr_viewer_presentation.md --output  $(BUILDDIR)/html/nczarr_viewer_presentation.pdf --browser-timeout 120
+presentationpdf:
+	marp nczarr_viewer_presentation.md --output nczarr_viewer_presentation.pdf --theme-set marp-pdf.css
 
 # Build HTML presentation
 presentationhtml: $(BUILDDIR)/html
-	marp nczarr_viewer_presentation.md --output $(BUILDDIR)/html/nczarr_viewer_presentation.html
+	marp nczarr_viewer_presentation.md --output $(BUILDDIR)/html/nczarr_viewer_presentation.html --theme-set ../assets/marp.css
 	@mkdir -p $(BUILDDIR)/html/static
 	@cp $(SOURCEDIR)/static/*.mp4 $(BUILDDIR)/html/static/
 
@@ -48,3 +48,4 @@ clean:
 	rm -rf $(BUILDDIR)/*
 	rm -f nczarr_viewer_presentation.html
 	rm -f nczarr_viewer_presentation.pdf
+	rm -f nczarr_viewer_presentation_pdf.md
