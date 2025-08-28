@@ -239,6 +239,7 @@ north_sea = august30_data.sel(
 - **Collaboration**: Multi-user editing and sharing
 
 ---
+
 # 🌊 Thank You!
 
 **Samuel Fooks** - samuel.fooks@vliz.be 
@@ -246,6 +247,3 @@ north_sea = august30_data.sel(
 **Docker Hub**: samfooks/nczarr-viewer
 
 **Questions?**
-
----
-
