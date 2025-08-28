@@ -17,14 +17,15 @@ html:
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 # Build both docs and presentation
-all: presentationhtml html presentationpdf
+all: presentationhtml presentationpdf html
 
 # Build PDF presentation
-presentationpdf: nczarr_viewer_presentation.pdf
+presentationpdf: $(BUILDDIR)/html
+	marp nczarr_viewer_presentation.md --output  $(BUILDDIR)/html/nczarr_viewer_presentation.pdf
 
 # Build HTML presentation
 presentationhtml: $(BUILDDIR)/html
-	marp nczarr_viewer_presentation.md --output $(BUILDDIR)/html/nczarr_viewer_presentation.html --timeout 60000
+	marp nczarr_viewer_presentation.md --output $(BUILDDIR)/html/nczarr_viewer_presentation.html
 	@mkdir -p $(BUILDDIR)/html/static
 	@cp $(SOURCEDIR)/static/*.mp4 $(BUILDDIR)/html/static/
 
@@ -32,13 +33,6 @@ presentationhtml: $(BUILDDIR)/html
 $(BUILDDIR)/html:
 	@mkdir -p $@
 
-# Rule to build PDF from markdown using pandoc
-nczarr_viewer_presentation.pdf: nczarr_viewer_presentation.md
-	marp $< --output $@ --timeout 60000
-
-# Rule to build HTML from markdown using Marp in build/html directory (for direct use)
-nczarr_viewer_presentation.html: nczarr_viewer_presentation.md
-	marp $< --output $(BUILDDIR)/html/$@
 
 # Sphinx targets - route all unknown targets to Sphinx using the "make mode" option
 # $(O) is meant as a shortcut for $(SPHINXOPTS).
