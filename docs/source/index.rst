@@ -56,7 +56,6 @@ Additional Resources
 - **Source Code**: https://github.com/EDITO-Infra/nczarr-viewer
 - **Docker Hub**: samfooks/nczarr-viewer
 - **Presentation HTML**: `NCZarr Viewer Presentation <nczarr_viewer_presentation.html>`_
-- **Presentation PDF**: `NCZarr Viewer Presentation <nczarr_viewer_presentation.pdf>`_
 
 Indices and tables
 ==================

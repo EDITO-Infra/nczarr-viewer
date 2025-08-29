@@ -67,17 +67,6 @@ jobs:
             cp -r source/static/*.mp4 build/html/static/ 2>/dev/null || echo "No static files to copy"
           fi
 
-      - name: Copy PDF presentation if available
-        working-directory: docs
-        run: |
-          if [ -f nczarr_viewer_presentation.pdf ]; then
-            cp nczarr_viewer_presentation.pdf build/html/
-            echo "✅ PDF presentation copied to build/html/"
-          else
-            echo "ℹ️  PDF presentation not found - this is expected when building in CI"
-            echo "   Build locally with 'make presentations' if you need the PDF"
-          fi
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
