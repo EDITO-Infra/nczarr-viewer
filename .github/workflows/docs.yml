@@ -1,0 +1,94 @@
+name: Build & Deploy Documentation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          cache: "pip"
+
+      - name: Install Python deps for docs
+        run: |
+          python -m pip install -U pip
+          # If you keep a docs requirements file, install it first
+          if [ -f docs/requirements.txt ]; then pip install -r docs/requirements.txt; fi
+          if [ -f requirements-docs.txt ]; then pip install -r requirements-docs.txt; fi
+          # Fallback minimums (add themes/parsers you use)
+          pip install sphinx sphinx-rtd-theme myst-parser
+          # If autodoc imports your package, install it:
+          if [ -f pyproject.toml ] || [ -f setup.py ]; then pip install -e .; fi
+
+      - name: Setup Node.js for Marp
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install Marp CLI
+        run: npm install -g @marp-team/marp-cli
+
+      - name: Build Sphinx HTML docs
+        working-directory: docs
+        run: |
+          make clean
+          make html
+          # Ensure Pages doesn't run Jekyll
+          touch build/html/.nojekyll
+
+      - name: Build HTML presentation in CI
+        working-directory: docs
+        run: |
+          echo "Building HTML presentation in CI..."
+          marp nczarr_viewer_presentation.md --output build/html/nczarr_viewer_presentation.html --theme-set ../assets/marp.css
+          echo "✅ HTML presentation built successfully!"
+
+      - name: Copy static files
+        working-directory: docs
+        run: |
+          # Copy static video files if they exist
+          if [ -d source/static ]; then
+            cp -r source/static/*.mp4 build/html/static/ 2>/dev/null || echo "No static files to copy"
+          fi
+
+      - name: Copy PDF presentation if available
+        working-directory: docs
+        run: |
+          if [ -f nczarr_viewer_presentation.pdf ]; then
+            cp nczarr_viewer_presentation.pdf build/html/
+            echo "✅ PDF presentation copied to build/html/"
+          else
+            echo "ℹ️  PDF presentation not found - this is expected when building in CI"
+            echo "   Build locally with 'make presentations' if you need the PDF"
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/build/html
+
+  deploy:
+    needs: build-docs
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
