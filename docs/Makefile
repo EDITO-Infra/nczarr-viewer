@@ -16,13 +16,20 @@ help:
 # Build Sphinx HTML documentation only
 html:
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@echo "Copying static files to build/html/static..."
+	@cp -r $(DOCS_DIR)/source/static $(BUILDDIR)/html/static
+	@echo "✅ Static files copied to build/html/static"
+	@cp $(DOCS_DIR)/nczarr_viewer_presentation.pdf $(BUILDDIR)/html/nczarr_viewer_presentation.pdf
+	@echo "✅ PDF presentation copied to build/html/nczarr_viewer_presentation.pdf"
+	@cp $(SOURCEDIR)/nczarr_viewer_presentation.html $(BUILDDIR)/html/nczarr_viewer_presentation.html
+	@echo "✅ HTML presentation copied to build/html/nczarr_viewer_presentation.html"
 
-# Build presentations (for pre-commit)
+# Build presentations (for local use)
 presentations:
-	@echo "Building presentations $(DOCS_DIR)..."
-	@marp $(DOCS_DIR)/nczarr_viewer_presentation.md --output nczarr_viewer_presentation.pdf --theme-set marp-pdf.css
-	@marp $(DOCS_DIR)/nczarr_viewer_presentation.md --output nczarr_viewer_presentation.html --theme-set ../assets/marp.css
-	@echo "Presentations built successfully!"
+	@echo "Building presentations locally..."
+	@marp $(DOCS_DIR)/nczarr_viewer_presentation.md --output $(DOCS_DIR)/nczarr_viewer_presentation.pdf --theme-set marp-pdf.css
+	@marp $(DOCS_DIR)/nczarr_viewer_presentation.md --output $(SOURCEDIR)/nczarr_viewer_presentation.html --theme-set ../assets/marp.css
+	@echo "✅ Local presentations built successfully!"
 
 # Build everything (for manual builds)
 all: html presentations
@@ -43,5 +50,5 @@ $(BUILDDIR)/html:
 
 clean:
 	rm -rf $(BUILDDIR)/*
-	rm -rf nczarr_viewer_presentation.pdf
-	rm -rf nczarr_viewer_presentation.html
+	rm -rf $(DOCS_DIR)/nczarr_viewer_presentation.pdf
+	rm -rf $(SOURCEDIR)/nczarr_viewer_presentation.html

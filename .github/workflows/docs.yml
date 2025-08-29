@@ -36,6 +36,15 @@ jobs:
           # If autodoc imports your package, install it:
           if [ -f pyproject.toml ] || [ -f setup.py ]; then pip install -e .; fi
 
+      - name: Setup Node.js for Marp
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install Marp CLI
+        run: npm install -g @marp-team/marp-cli
+
       - name: Build Sphinx HTML docs
         working-directory: docs
         run: |
@@ -44,25 +53,29 @@ jobs:
           # Ensure Pages doesn't run Jekyll
           touch build/html/.nojekyll
 
-      - name: Copy local presentation files to build/html
+      - name: Build HTML presentation in CI
         working-directory: docs
         run: |
-          # Copy pre-built presentations (built by pre-commit)
+          echo "Building HTML presentation in CI..."
+          marp nczarr_viewer_presentation.md --output build/html/nczarr_viewer_presentation.html --theme-set ../assets/marp.css
+          echo "✅ HTML presentation built successfully!"
+
+      - name: Copy static files
+        working-directory: docs
+        run: |
+          # Copy static video files if they exist
+          if [ -d source/static ]; then
+            cp -r source/static/*.mp4 build/html/static/ 2>/dev/null || echo "No static files to copy"
+          fi
+
+      - name: Copy presentation files to build/html
+        working-directory: docs
+        run: |
           if [ -f nczarr_viewer_presentation.pdf ]; then
             cp nczarr_viewer_presentation.pdf build/html/
             echo "✅ PDF presentation copied to build/html/"
           else
-            echo "⚠️  PDF presentation not found - run 'make presentations' locally first"
-          fi
-          if [ -f nczarr_viewer_presentation.html ]; then
-            cp nczarr_viewer_presentation.html build/html/
-            echo "✅ HTML presentation copied to build/html/"
-          else
-            echo "⚠️  HTML presentation not found - run 'make presentations' locally first"
-          fi
-          # Copy static video files if they exist
-          if [ -d source/static ]; then
-            cp -r source/static/*.mp4 build/html/static/ 2>/dev/null || echo "No static files to copy"
+            echo "⚠️  PDF presentation not found in docs/ - build locally with 'make presentations'"
           fi
 
       - name: Upload Pages artifact
