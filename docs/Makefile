@@ -19,10 +19,6 @@ html:
 	@echo "Copying static files to build/html/static..."
 	@cp -r $(DOCS_DIR)/source/static $(BUILDDIR)/html/static
 	@echo "✅ Static files copied to build/html/static"
-	@cp $(DOCS_DIR)/nczarr_viewer_presentation.pdf $(BUILDDIR)/html/nczarr_viewer_presentation.pdf
-	@echo "✅ PDF presentation copied to build/html/nczarr_viewer_presentation.pdf"
-	@cp $(SOURCEDIR)/nczarr_viewer_presentation.html $(BUILDDIR)/html/nczarr_viewer_presentation.html
-	@echo "✅ HTML presentation copied to build/html/nczarr_viewer_presentation.html"
 
 # Build presentations (for local use)
 presentations:
