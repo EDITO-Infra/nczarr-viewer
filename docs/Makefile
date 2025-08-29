@@ -43,3 +43,5 @@ $(BUILDDIR)/html:
 
 clean:
 	rm -rf $(BUILDDIR)/*
+	rm -rf nczarr_viewer_presentation.pdf
+	rm -rf nczarr_viewer_presentation.html

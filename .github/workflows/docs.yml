@@ -50,15 +50,15 @@ jobs:
           # Copy pre-built presentations (built by pre-commit)
           if [ -f nczarr_viewer_presentation.pdf ]; then
             cp nczarr_viewer_presentation.pdf build/html/
+            echo "✅ PDF presentation copied to build/html/"
+          else
+            echo "⚠️  PDF presentation not found - run 'make presentations' locally first"
           fi
           if [ -f nczarr_viewer_presentation.html ]; then
             cp nczarr_viewer_presentation.html build/html/
-          fi
-          if [ ! -f build/html/nczarr_viewer_presentation.html ]; then
-            echo "Warning: HTML presentation not found - run 'make presentations' locally first"
-          fi
-          if [ ! -f build/html/nczarr_viewer_presentation.pdf ]; then
-            echo "Warning: PDF presentation not found - run 'make presentations' locally first"
+            echo "✅ HTML presentation copied to build/html/"
+          else
+            echo "⚠️  HTML presentation not found - run 'make presentations' locally first"
           fi
           # Copy static video files if they exist
           if [ -d source/static ]; then
