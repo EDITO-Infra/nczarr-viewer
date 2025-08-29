@@ -21,7 +21,7 @@ html:
 presentations:
 	@echo "Building presentations $(DOCS_DIR)..."
 	@marp $(DOCS_DIR)/nczarr_viewer_presentation.md --output nczarr_viewer_presentation.pdf --theme-set marp-pdf.css
-	@marp $(DOCS_DIR)/nczarr_viewer_presentation.md --output html/nczarr_viewer_presentation.html --theme-set ../assets/marp.css
+	@marp $(DOCS_DIR)/nczarr_viewer_presentation.md --output nczarr_viewer_presentation.html --theme-set ../assets/marp.css
 	@echo "Presentations built successfully!"
 
 # Build everything (for manual builds)
