@@ -2,50 +2,88 @@
 
 This directory contains the documentation for the NCZarr Viewer project.
 
-## Building Documentation
+## Workflow
 
-To build all documentation, run from the `docs` directory:
+### 1. Pre-commit (Automatic)
+- **Presentations are built automatically** when you commit markdown files
+- Uses `make presentations` to build PDF and HTML presentations
+- Ensures presentations are always up-to-date
 
+### 2. Local Development
 ```bash
-make doall
+# Build presentations only
+make presentations
+
+# Build Sphinx HTML docs only  
+make html
+
+# Build everything
+make all
+
+# Clean build directory
+make clean
 ```
 
-This will:
-- Generate Sphinx HTML documentation in `build/html/`
-- Generate PDF presentation from Marp markdown
-- Generate HTML presentation from Marp markdown
+### 3. GitHub Actions (CI/CD)
+- **Sphinx HTML docs** are built in CI
+- **Presentation files** are copied from pre-commit builds
+- **Static files** (videos, etc.) are copied to build/html
+- **GitHub Pages** deployment happens automatically
 
-## Individual Build Targets
+## File Structure
 
-- `make sphinx` - Build only Sphinx HTML documentation
-- `make pdf` - Generate only PDF presentation
-- `make html` - Generate only HTML presentation
-- `make clean` - Remove all generated files
+```
+docs/
+├── source/                 # Sphinx source files
+│   ├── static/            # Static assets (videos, images)
+│   └── *.rst              # ReStructuredText files
+├── build/                  # Build output (generated)
+│   └── html/              # Final HTML output
+├── nczarr_viewer_presentation.md  # Marp presentation source
+├── Makefile               # Build automation
+├── requirements.txt       # Python dependencies
+└── README.md             # This file
+```
 
-## Viewing Documentation
+## Prerequisites
 
-After building, you can view the documentation:
-
-- **Sphinx Docs**: Open `build/html/index.html` in your browser
-- **HTML Presentation**: Open `dash_nczarr_viewer_presentation.html` in your browser
-- **PDF Presentation**: Open `dash_nczarr_viewer_presentation.pdf`
-
-## GitHub Pages
-
-The documentation is configured to work with GitHub Pages. The main entry point (`index.html`) will automatically redirect to the built Sphinx documentation.
-
-## Requirements
-
-- Python 3.10+ with virtual environment
-- Marp CLI for presentation generation
-- Sphinx with Read the Docs theme
-
-## Installation
-
+### For Presentations
 ```bash
-# Install Marp CLI (if not already installed)
-make install-marp
+# Install Marp CLI globally
+npm install -g @marp-team/marp-cli
+```
 
+### For Sphinx Docs
+```bash
+# Install Python dependencies
+pip install -r docs/requirements.txt
+```
+
+## Development
+
+1. **Edit presentation**: Modify `nczarr_viewer_presentation.md`
+2. **Pre-commit builds**: Presentations are built automatically
+3. **Edit Sphinx docs**: Modify files in `source/`
+4. **Test locally**: Run `make html` to preview
+5. **Commit**: Pre-commit builds presentations, CI builds docs
+
+## Troubleshooting
+
+### Presentations not building
+```bash
 # Check if Marp is installed
-make check-marp
+marp --version
+
+# Build manually
+make presentations
+```
+
+### Sphinx docs not building
+```bash
+# Install dependencies
+pip install -r docs/requirements.txt
+
+# Clean and rebuild
+make clean
+make html
 ```

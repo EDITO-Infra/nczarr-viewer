@@ -48,5 +48,11 @@ dependencies = [
     "sphinx-rtd-theme>=3.0.2",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pre-commit>=3.0.0",
+    "marp-cli>=3.0.0",
+]
+
 [project.urls]
-Homepage = "https://github.com/samuelfooks/nczarr-viewer"
+Homepage = "https://github.com/EDITO-Infra/nczarr-viewer"
