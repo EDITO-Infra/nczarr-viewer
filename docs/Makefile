@@ -23,8 +23,8 @@ html:
 # Build presentations (for local use)
 presentations:
 	@echo "Building presentations locally..."
-	@marp $(DOCS_DIR)/nczarr_viewer_presentation.md --output $(DOCS_DIR)/nczarr_viewer_presentation.pdf --theme-set marp-pdf.css
-	@marp $(DOCS_DIR)/nczarr_viewer_presentation.md --output $(SOURCEDIR)/nczarr_viewer_presentation.html --theme-set ../assets/marp.css
+	@marp $(SOURCEDIR)/nczarr_viewer_presentation.md --output $(SOURCEDIR)/nczarr_viewer_presentation.pdf --theme $(SOURCEDIR)/static/styles/edito-marp.css --allow-local-files
+	@marp $(SOURCEDIR)/nczarr_viewer_presentation.md --output $(SOURCEDIR)/nczarr_viewer_presentation.html --theme $(SOURCEDIR)/static/styles/edito-marp.css --allow-local-files
 	@echo "✅ Local presentations built successfully!"
 
 # Build everything (for manual builds)

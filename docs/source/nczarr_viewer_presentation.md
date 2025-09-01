@@ -1,7 +1,43 @@
 ---
 marp: true
 paginate: true
-theme: edito-tutorials
+theme: edito-marp
+backgroundImage: url('static/styles/background.jpg')
+backgroundSize: cover
+backgroundPosition: center
+footer: '<img src="static/styles/footer-banner.png" alt="Funded by the European Union" />'
+# backgroundImage: url('source/static/branding/background.jpg')
+# backgroundSize: cover
+# backgroundPosition: center
+
+# footer: '<img src="source/static/branding/footer-banner.png" width="280" alt="Funded by the European Union" />'
+
+# # style: branding.
+# # SIMPLER SELECTORS (let Marp add the scoping)
+# style: |
+#   /* Pin footer bottom-right, leave room for page number */
+#   section > footer {
+#     position: absolute;
+#     right: 56px;
+#     bottom: 12px;
+#     margin: 0;
+#     padding: 0;
+#     z-index: 2;
+#     text-align: right;
+#   }
+#   section > footer img { height: 32px; }
+
+#   /* Move the pagination chip to the very edge */
+#   section::after {
+#     right: 10px;
+#     bottom: 10px;
+#     background: rgba(0,0,0,.35);
+#     color: #fff;
+#     padding: 2px 8px;
+#     border-radius: 12px;
+#     font-size: 12px;
+#   }
+# theme: edito
 title: NCZarr Viewer
 subtitle: Exploring and Subsetting Zarr & NetCDF Data
 author: Samuel Fooks

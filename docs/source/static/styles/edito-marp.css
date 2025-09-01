@@ -1,0 +1,101 @@
+/* @theme edito-marp */
+
+@import 'default';
+/* <-- inherit default Marp theme */
+
+/* ---------------- Palette ---------------- */
+:root {
+  --edito-blue-900: #001D6C;
+  --edito-blue-700: #0043CE;
+  --edito-blue-200: #A6C8FF;
+  --edito-red: #F0354B;
+  --edito-purple: #9C6EFF;
+  --edito-cyan: #00BFFF;
+  --edito-amber: #FFC107;
+  --edito-text-dark: #0d1b2a;
+  --edito-text-light: #ffffff;
+}
+
+/* ---------------- Default (dark background) text ---------------- */
+section {
+  color: var(--edito-text-light);
+}
+
+section h1,
+section h2,
+section h3 {
+  color: var(--edito-blue-200);
+}
+
+section strong {
+  color: var(--edito-blue-200);
+}
+
+/* Links */
+section a {
+  color: var(--edito-cyan);
+  text-decoration: none;
+  border-bottom: 2px solid rgba(0, 191, 255, .4);
+}
+
+section a:hover {
+  border-bottom-color: var(--edito-cyan);
+}
+
+/* ---------------- Footer pinned bottom-right ---------------- */
+section>footer {
+  position: absolute;
+  right: 56px;
+  bottom: 12px;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+  text-align: right;
+}
+
+section>footer img {
+  height: 32px;
+}
+
+/* ---------------- Pagination chip ---------------- */
+section::after {
+  right: 10px;
+  bottom: 10px;
+  background: rgba(0, 0, 0, .35);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+/* ---------------- Light slide helper ---------------- */
+.light-slide {
+  color: var(--edito-text-dark) !important;
+}
+
+.light-slide h1,
+.light-slide h2,
+.light-slide h3 {
+  color: var(--edito-blue-900) !important;
+}
+
+.light-slide strong {
+  color: var(--edito-blue-700) !important;
+}
+
+/* ---------------- Accent helpers ---------------- */
+.accent-red {
+  color: var(--edito-red);
+}
+
+.accent-purple {
+  color: var(--edito-purple);
+}
+
+.accent-cyan {
+  color: var(--edito-cyan);
+}
+
+.accent-amber {
+  color: var(--edito-amber);
+}
