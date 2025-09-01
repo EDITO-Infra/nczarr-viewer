@@ -64,7 +64,7 @@ jobs:
         run: |
           # Copy static video files if they exist
           if [ -d source/static ]; then
-            cp -r source/static/*.mp4 build/html/static/ 2>/dev/null || echo "No static files to copy"
+            cp -r source/static/* build/html/static/ 2>/dev/null || echo "No static files to copy in /static"
           fi
 
       - name: Upload Pages artifact
