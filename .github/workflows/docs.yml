@@ -56,7 +56,7 @@ jobs:
         working-directory: docs
         run: |
           echo "Building HTML presentation in CI..."
-          marp source/nczarr_viewer_presentation.md --output build/html/nczarr_viewer_presentation.html --theme source/static/styles/edito-marp.css
+          marp source/nczarr_viewer_presentation.md --output build/html/nczarr_viewer_presentation.html --theme source/static/styles/edito-marp.css --allow-local-files
           echo "✅ HTML presentation built successfully!"
 
       - name: Copy static files
