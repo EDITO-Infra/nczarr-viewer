@@ -5,7 +5,7 @@ theme: edito-marp
 backgroundImage: url('static/styles/background.jpg')
 backgroundSize: cover
 backgroundPosition: center
-footer: 'url(static/styles/footer-banner.png) no-repeat bottom right'
+footer: '![Funded by the European Union](static/styles/footer-banner.png)'
 # backgroundImage: url('source/static/branding/background.jpg')
 # backgroundSize: cover
 # backgroundPosition: center
