@@ -2,7 +2,7 @@
 marp: true
 paginate: true
 theme: edito-marp
-backgroundImage: url('static/styles/background.jpg')
+backgroundImage: url('static/styles/editobackgrounddark.png')
 backgroundSize: cover
 backgroundPosition: center
 footer: '![Funded by the European Union](static/styles/footer-banner.png)'
@@ -38,16 +38,20 @@ footer: '![Funded by the European Union](static/styles/footer-banner.png)'
 #     font-size: 12px;
 #   }
 # theme: edito
-title: NCZarr Viewer
-subtitle: Exploring and Subsetting Zarr & NetCDF Data
-author: Samuel Fooks
+# title: NCZarr Viewer
+# subtitle: Exploring and Subsetting Zarr & NetCDF Data
+# author: Samuel Fooks
 ---
 
-# 🌊 NetCDF Zarr Viewer
+![bg 92%](static/styles/titleslide.png)
+<!-- _class: title-slide no-pagination -->
 
-## A Tool to Explore cloud data
-**Samuel Fooks** - VLIZ  
-**Making public NetCDF/Zarr Data Accessible to Everyone**
+<div class="title-wrap">
+  <h1 class="title">NCZarr Viewer</h1>
+  <div class="subtitle">Exploring and Subsetting Zarr &amp; NetCDF Data</div>
+  <div class="meta">2 Sept 2025 </div>
+  <div class="meta"> Samuel Fooks — VLIZ </div>
+</div>
 
 ---
 
