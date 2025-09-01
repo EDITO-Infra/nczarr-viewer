@@ -55,9 +55,16 @@ jobs:
       - name: Copy static files
         working-directory: docs
         run: |
-          # Copy static video files if they exist
+          echo "Current directory: $(pwd)"
+          echo "Source static exists: $(ls -la source/static/)"
+          echo "Build html exists: $(ls -la build/html/)"
           if [ -d source/static ]; then
-            cp -r source/static build/html/ 2>/dev/null || echo "No static files to copy in /static"
+            echo "Copying static files..."
+            cp -rv source/static build/html/
+            echo "After copy, build/html/static contains:"
+            ls -la build/html/static/
+          else
+            echo "source/static directory not found"
           fi
 
       - name: Build HTML presentation in CI
