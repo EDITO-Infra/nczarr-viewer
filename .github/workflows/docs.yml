@@ -52,13 +52,6 @@ jobs:
           # Ensure Pages doesn't run Jekyll
           touch build/html/.nojekyll
 
-      - name: Build HTML presentation in CI
-        working-directory: docs
-        run: |
-          echo "Building HTML presentation in CI..."
-          marp source/nczarr_viewer_presentation.md --output build/html/nczarr_viewer_presentation.html --theme source/static/styles/edito-marp.css --allow-local-files
-          echo "✅ HTML presentation built successfully!"
-
       - name: Copy static files
         working-directory: docs
         run: |
@@ -66,6 +59,13 @@ jobs:
           if [ -d source/static ]; then
             cp -r source/static build/html/ 2>/dev/null || echo "No static files to copy in /static"
           fi
+
+      - name: Build HTML presentation in CI
+        working-directory: docs
+        run: |
+          echo "Building HTML presentation in CI..."
+          marp source/nczarr_viewer_presentation.md --output build/html/nczarr_viewer_presentation.html --theme source/static/styles/edito-marp.css --allow-local-files
+          echo "✅ HTML presentation built successfully!"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
