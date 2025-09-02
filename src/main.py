@@ -103,7 +103,8 @@ class ViewerApp:
                                     html.Small([
                                         html.I("💡 Tip: For netcdf files on s3 storage, add ",
                                                style={"color": "#6c757d"}),
-                                        html.Code("#mode=bytes", style={"backgroundColor": "#f8f9fa", "padding": "2px 4px", "borderRadius": "3px"}),
+                                        html.Code("#mode=bytes", style={
+                                                  "backgroundColor": "#f8f9fa", "padding": "2px 4px", "borderRadius": "3px"}),
                                         html.I(" at the end of the URL to ensure proper data access.",
                                                style={"color": "#6c757d"})
                                     ], style={"marginTop": "5px", "fontSize": "12px"})
@@ -163,13 +164,6 @@ class ViewerApp:
   "decode_timedelta": false
 }
 
-{
-  "backend": "xarray",
-  "engine": "h5netcdf",
-  "chunks": {"time": 1},
-  "decode_cf": true,
-  "mask_and_scale": true
-}
                                          ''', style={"backgroundColor": "#f8f9fa", "padding": "10px", "borderRadius": "4px"}),
 
                                         html.H6(
@@ -181,12 +175,6 @@ class ViewerApp:
   "username": "your_username",
   "password": "your_password",
   "dataset_id": "dataset_identifier"
-}
-
-{
-  "backend": "copernicusmarine",
-  "engine": "custom_open_zarr.open_zarr",
-  "chunks": {"time": 1}
 }
                                          ''', style={"backgroundColor": "#f8f9fa", "padding": "10px", "borderRadius": "4px"}),
 
