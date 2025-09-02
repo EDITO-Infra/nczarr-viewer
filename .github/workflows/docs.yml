@@ -25,16 +25,19 @@ jobs:
           python-version: "3.x"
           cache: "pip"
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
       - name: Install Python deps for docs
         run: |
-          python -m pip install -U pip
-          # If you keep a docs requirements file, install it first
-          if [ -f docs/requirements.txt ]; then pip install -r docs/requirements.txt; fi
-          if [ -f requirements-docs.txt ]; then pip install -r requirements-docs.txt; fi
-          # Fallback minimums (add themes/parsers you use)
-          pip install sphinx sphinx-rtd-theme myst-parser
-          # If autodoc imports your package, install it:
-          if [ -f pyproject.toml ] || [ -f setup.py ]; then pip install -e .; fi
+          # Install minimal dependencies needed for Sphinx autodoc to work
+          uv pip install sphinx sphinx-rtd-theme myst-parser
+          # Install only the core dependencies needed by the modules being documented
+          uv pip install dash dash-bootstrap-components xarray numpy plotly pyproj requests
+          # Install the project in development mode (minimal install)
+          uv pip install -e .
 
       - name: Setup Node.js for Marp
         uses: actions/setup-node@v4
