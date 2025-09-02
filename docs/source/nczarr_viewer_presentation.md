@@ -6,41 +6,7 @@ backgroundImage: url('static/styles/editobackgrounddark.png')
 backgroundSize: cover
 backgroundPosition: center
 footer: '![Funded by the European Union](static/styles/footer-banner.png)'
-# backgroundImage: url('source/static/branding/background.jpg')
-# backgroundSize: cover
-# backgroundPosition: center
 
-# footer: '<img src="source/static/branding/footer-banner.png" width="280" alt="Funded by the European Union" />'
-
-# # style: branding.
-# # SIMPLER SELECTORS (let Marp add the scoping)
-# style: |
-#   /* Pin footer bottom-right, leave room for page number */
-#   section > footer {
-#     position: absolute;
-#     right: 56px;
-#     bottom: 12px;
-#     margin: 0;
-#     padding: 0;
-#     z-index: 2;
-#     text-align: right;
-#   }
-#   section > footer img { height: 32px; }
-
-#   /* Move the pagination chip to the very edge */
-#   section::after {
-#     right: 10px;
-#     bottom: 10px;
-#     background: rgba(0,0,0,.35);
-#     color: #fff;
-#     padding: 2px 8px;
-#     border-radius: 12px;
-#     font-size: 12px;
-#   }
-# theme: edito
-# title: NCZarr Viewer
-# subtitle: Exploring and Subsetting Zarr & NetCDF Data
-# author: Samuel Fooks
 ---
 
 ![bg 92%](static/styles/titleslide.png)
@@ -57,25 +23,12 @@ footer: '![Funded by the European Union](static/styles/footer-banner.png)'
 
 # NCZarr Viewer
 
-- 📊 **Load and explore** NetCDF and Zarr datasets
+- 📊 **Load and explore** Analysis Ready Cloud Optimized(ARCO) NetCDF and Zarr datasets
 - 🔍 **Browse variables** and dimensions through a simple interface
 - ✂️ **Subset data** by time, space, and other dimensions visually
 - 📈 **Visualize results** with interactive plots
-- 🌍 **Access cloud data** directly from S3 buckets
-- 🚀 **Work with large datasets** efficiently
 - 🐳 **Containerized** for easy deployment and sharing
 - [In EDITO Datalab!](https://datalab.dive.edito.eu/launcher/service-playground/netcdf-zarr-viewer?name=netcdf-zarr-viewer&version=1.0.3)
-
----
-
-# 🏗️ Architecture Overview
-
-
-👤 User Interface  →  🚀 Dash App  →  🗄️ Data Engine
-         ↓                   ↓                ↓
-    🖥️ Web Browser    🐍 Python Core    📊 Xarray
-         ↓                   ↓                ↓
-    🎨 Interactive UI   🔧 Data Manager   📁 NetCDF/Zarr
 
 ---
 
@@ -84,9 +37,7 @@ footer: '![Funded by the European Union](static/styles/footer-banner.png)'
 - **Frontend**: Dash + Bootstrap Components
 - **Data Processing**: Xarray + NumPy
 - **File Formats**: NetCDF4, Zarr
-- **Visualization**: Plotly, Matplotlib, Cartopy 
-- **Cloud Access**: S3FS, FSSpec (cloud storage access)
-- **Marine Data**: Copernicus Marine Toolbox integration
+- **Visualization**: Plotly, Matplotlib, Cartopy
 
 ---
 
@@ -116,7 +67,7 @@ python run.py
 
 # 📁 Supported Data Sources
 
-- **ARCO data on EDITO**: ARCO datasets from the EDITO STAC
+- **ARCO data on EDITO**: Analysis Ready Cloud Optimized datasets from the EDITO STAC
 - **Personal Cloud Storage**: [Minio storage](https://datalab.dive.edito.eu/file-explorer) on EDITO
 - **Local Files**: NetCDF, Zarr
 
@@ -138,42 +89,15 @@ python run.py
 
 # 🌊 Marine Data Examples
 
-## EDITO Integration
-- **Biodiversity**: Species distribution data
+## EDITO STAC
 - **Chemistry**: Water quality parameters
 - **Geology**: Seafloor characteristics
-- **STAC Access**: Browse collections and datasets
+- **Biodiversity**: Species distribution data
 
 ## Copernicus Marine 
-- **Direct Access**: CMEMS credentials integration (you will need an account)
+- **Access**: CMEMS credentials integration (you will need an [account](https://help.marine.copernicus.eu/en/articles/7949409-copernicus-marine-toolbox-introduction#h_9172b5c79a))
 - **Multiple Formats**: NetCDF, Zarr (and others in future)
 - **Real-time Data**: Latest ocean observations
-
----
-
-# 🚀 Performance Features
-
-- **Chunked Processing**: Handle datasets larger than memory
-- **Lazy Loading**: Only load data when needed
-- **Cloud Optimization**: Efficient S3 data access
-
----
-
-# 🔧 Configuration & Deployment
-
-## Setup
-To access CMEMS datasets you may need an account using [Copernicus Marine Toolbox](https://help.marine.copernicus.eu/en/articles/7949409-copernicus-marine-toolbox-introduction#h_9172b5c79a)
-```bash
-# CMEMS credentials
-CMEMS_USERNAME=your_username
-CMEMS_PASSWORD=your_password
-```
-
-## Docker Deployment
-```bash
-docker build -t nczarr-viewer .
-docker run -p 8050:8050 nczarr-viewer
-```
 
 ---
 
@@ -289,6 +213,6 @@ north_sea = august30_data.sel(
 
 **Samuel Fooks** - samuel.fooks@vliz.be 
 **GitHub**: [https://github.com/EDITO-Infra/nczarr-viewer](https://github.com/EDITO-Infra/nczarr-viewer)
-**Docker Hub**: samfooks/nczarr-viewer
+**Docker Hub**: samfooks/nczarr-viewer:latest
 
 **Questions?**

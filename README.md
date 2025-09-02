@@ -132,7 +132,6 @@ nczarr-viewer/
 
 - **API Reference**: See `docs/source/` for detailed documentation
 - **Presentation**: Check `docs/nczarr_viewer_presentation.md` for usage examples
-- **Examples**: Explore `docs/explore_data/` for sample datasets and workflows
 
 ## 🤝 Contributing
 
@@ -157,7 +156,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Issues**: [GitHub Issues](hhttps://github.com/EDITO-Infra/nczarr-viewer/issues)
 - **Documentation**: Check the `docs/` folder
-- **Examples**: See `docs/explore_data/` for sample workflows
 
 ---
 
