@@ -30,14 +30,15 @@ jobs:
         with:
           version: "latest"
 
-      - name: Install Python deps for docs
+      - name: Create virtual environment and install dependencies
         run: |
-          # Install minimal dependencies needed for Sphinx autodoc to work
-          uv pip install sphinx sphinx-rtd-theme myst-parser
-          # Install only the core dependencies needed by the modules being documented
-          uv pip install dash dash-bootstrap-components xarray numpy plotly pyproj requests
-          # Install the project in development mode (minimal install)
-          uv pip install -e .
+          # Create virtual environment
+          uv venv
+          # Activate virtual environment and install from pyproject.toml
+          source .venv/bin/activate
+          uv sync
+          # Install additional docs-specific dependencies
+          uv add sphinx sphinx-rtd-theme myst-parser
 
       - name: Setup Node.js for Marp
         uses: actions/setup-node@v4
@@ -50,6 +51,8 @@ jobs:
       - name: Build Sphinx HTML docs
         working-directory: docs
         run: |
+          # Activate virtual environment for Sphinx build
+          source ../.venv/bin/activate
           make clean
           make html
           # Ensure Pages doesn't run Jekyll
