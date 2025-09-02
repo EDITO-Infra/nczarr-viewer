@@ -64,6 +64,7 @@ footer: '![Funded by the European Union](static/styles/footer-banner.png)'
 - 🌍 **Access cloud data** directly from S3 buckets
 - 🚀 **Work with large datasets** efficiently
 - 🐳 **Containerized** for easy deployment and sharing
+- [In EDITO Datalab!](https://datalab.dive.edito.eu/launcher/service-playground/netcdf-zarr-viewer?name=netcdf-zarr-viewer&version=1.0.3)
 
 ---
 
@@ -91,12 +92,16 @@ footer: '![Funded by the European Union](static/styles/footer-banner.png)'
 
 # 🚀 Quick Start
 
+  [On EDITO]((https://datalab.dive.edito.eu/launcher/service-playground/netcdf-zarr-viewer?name=netcdf-zarr-viewer&version=1.0.3))
 
+**OR** 
 ```bash
-# Option 1: Use Docker
+# Use Docker
 docker run -p 8050:8050 samfooks/nczarr-viewer:latest
-
-# Option 2: Local development (if you have Python)
+```
+**OR**
+```bash
+# Local development (if you have Python)
 git clone [https://github.com/EDITO-Infra/nczarr-viewer)](https://github.com/EDITO-Infra/nczarr-viewer)
 cd nczarr-viewer
 pip install -r requirements.txt
@@ -240,7 +245,7 @@ north_sea = august30_data.sel(
   </video>
 </div>
 
-*Click to play*
+[Video link](https://github.com/EDITO-Infra/nczarr-viewer/blob/main/docs/source/static/nczarrviewer_localoredito.mp4)
 
 ---
 
@@ -253,7 +258,7 @@ north_sea = august30_data.sel(
   </video>
 </div>
 
-*Click to play*
+[Video link](https://github.com/EDITO-Infra/nczarr-viewer/blob/main/docs/source/static/nczarrviewer_minionetcdf.mp4)
 
 ---
 
@@ -267,7 +272,7 @@ north_sea = august30_data.sel(
   </video>
 </div>
 
-*Click to play*
+[Video link](https://github.com/EDITO-Infra/nczarr-viewer/blob/main/docs/source/static/nczarrviewer_cmems.mp4)
 
 ---
 
