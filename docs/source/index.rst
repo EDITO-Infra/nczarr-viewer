@@ -55,7 +55,7 @@ Additional Resources
 
 - **Source Code**: https://github.com/EDITO-Infra/nczarr-viewer
 - **Docker Hub**: samfooks/nczarr-viewer
-- **Presentation HTML**: `NCZarr Viewer Presentation <nczarr_viewer_presentation.html>`_
+- **Presentation HTML**: `DTOBioflow September 2 2025 - NCZarr Viewer Presentation <nczarr_viewer_presentation.html>`_
 
 Indices and tables
 ==================

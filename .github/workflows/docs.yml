@@ -78,6 +78,9 @@ jobs:
           echo "Building HTML presentation in CI..."
           marp source/nczarr_viewer_presentation.md --output build/html/nczarr_viewer_presentation.html --theme source/static/styles/edito-marp.css --allow-local-files
           echo "✅ HTML presentation built successfully!"
+          echo "Building PDF presentation in CI..."
+          marp source/nczarr_viewer_presentation.md --output nczarr_viewer_presentation.pdf --theme source/static/styles/edito-marp.css --allow-local-files
+          echo "✅ PDF presentation built successfully!"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

@@ -42,7 +42,7 @@ check-marp:
 # Build presentations (for local use)
 presentations: check-marp
 	@echo "Building presentations locally..."
-	@marp $(SOURCEDIR)/nczarr_viewer_presentation.md --output $(SOURCEDIR)/nczarr_viewer_presentation.pdf --theme $(SOURCEDIR)/static/styles/edito-marp.css --allow-local-files
+	@marp $(SOURCEDIR)/nczarr_viewer_presentation.md --output $(DOCS_DIR)/nczarr_viewer_presentation.pdf --theme $(SOURCEDIR)/static/styles/edito-marp.css --allow-local-files
 	@marp $(SOURCEDIR)/nczarr_viewer_presentation.md --output $(SOURCEDIR)/nczarr_viewer_presentation.html --theme $(SOURCEDIR)/static/styles/edito-marp.css --allow-local-files
 	@echo "✅ Local presentations built successfully!"
 
