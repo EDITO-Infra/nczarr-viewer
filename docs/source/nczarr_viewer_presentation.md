@@ -43,25 +43,21 @@ footer: '![Funded by the European Union](static/styles/footer-banner.png)'
 
 # 🚀 Quick Start
 
-  [On EDITO]((https://datalab.dive.edito.eu/launcher/service-playground/netcdf-zarr-viewer?name=netcdf-zarr-viewer&version=1.0.3))
+[On EDITO](https://datalab.dive.edito.eu/launcher/service-playground/netcdf-zarr-viewer?name=netcdf-zarr-viewer&version=1.0.3)
 
-**OR** 
+**DOCKER** 
 ```bash
-# Use Docker
 docker run -p 8050:8050 samfooks/nczarr-viewer:latest
 ```
-**OR**
+**LOCAL DEV**
 ```bash
-# Local development (if you have Python)
-git clone [https://github.com/EDITO-Infra/nczarr-viewer)](https://github.com/EDITO-Infra/nczarr-viewer)
+git clone https://github.com/EDITO-Infra/nczarr-viewer
 cd nczarr-viewer
 pip install -r requirements.txt
 python run.py
 ```
-
 **Access at**: http://localhost:8050
-
-**💡 Tip**: Think of this as "R Shiny for NetCDF data" - but already built for you!
+<small>**💡 Tip**: Think of this as "R Shiny for NetCDF data" - but already built for you!</small>
 
 ---
 
@@ -213,6 +209,7 @@ north_sea = august30_data.sel(
 
 **Samuel Fooks** - samuel.fooks@vliz.be 
 **GitHub**: [https://github.com/EDITO-Infra/nczarr-viewer](https://github.com/EDITO-Infra/nczarr-viewer)
+**DOC Pages** [https://edito-infra.github.io/nczarr-viewer](https://edito-infra.github.io/nczarr-viewer)
 **Docker Hub**: samfooks/nczarr-viewer:latest
 
 **Questions?**
