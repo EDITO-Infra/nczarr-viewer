@@ -54,7 +54,6 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pre-commit>=3.0.0",
-    "marp-cli>=3.0.0",
 ]
 
 [project.urls]

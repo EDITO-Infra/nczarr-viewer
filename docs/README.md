@@ -48,8 +48,21 @@ docs/
 ## Prerequisites
 
 ### For Presentations
+The Makefile will automatically check and install `marp-cli` if needed:
 ```bash
-# Install Marp CLI globally
+# The makefile will handle installation automatically
+make presentations
+```
+
+Or install manually:
+```bash
+# Option 1: via npm (recommended)
+npm install -g @marp-team/marp-cli
+
+# Option 2: via brew (macOS)
+brew install marp-cli
+
+# Option 3: via apt (Ubuntu/Debian - requires Node.js first)
 npm install -g @marp-team/marp-cli
 ```
 

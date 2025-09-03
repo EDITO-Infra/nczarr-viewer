@@ -36,7 +36,6 @@ jobs:
           uv venv
           # Activate virtual environment and install from pyproject.toml
           source .venv/bin/activate
-          uv sync
           # Install additional docs-specific dependencies
           uv add sphinx sphinx-rtd-theme myst-parser
 
